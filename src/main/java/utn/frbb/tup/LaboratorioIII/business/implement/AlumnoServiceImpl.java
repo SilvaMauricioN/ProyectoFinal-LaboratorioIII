@@ -20,12 +20,13 @@ import java.util.Random;
 
 @Component
 public class AlumnoServiceImpl implements AlumnoService {
-
-    //Inyeccion de dependencia por campo
+    private final AlumnoDao alumnoDao;
+    private final AsignaturaService asignaturaService;
     @Autowired
-    private AlumnoDao alumnoDao;
-    @Autowired
-    private AsignaturaService asignaturaService;
+    public AlumnoServiceImpl(AlumnoDao alumnoDao, AsignaturaService asignaturaService){
+        this.alumnoDao = alumnoDao;
+        this.asignaturaService = asignaturaService;
+    }
     @Override
     public void aprobarAsignatura(int materiaId, int nota, long dni) throws EstadoIncorrectoException, CorrelatividadesNoAprobadasException {
         Asignatura a = asignaturaService.getAsignatura(materiaId, dni);
