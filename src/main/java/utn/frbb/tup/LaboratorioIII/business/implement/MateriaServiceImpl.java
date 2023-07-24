@@ -2,6 +2,7 @@ package utn.frbb.tup.LaboratorioIII.business.implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import utn.frbb.tup.LaboratorioIII.business.service.MateriaService;
 import utn.frbb.tup.LaboratorioIII.business.service.ProfesorService;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
@@ -10,6 +11,7 @@ import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.MateriaDao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -24,7 +26,7 @@ public class MateriaServiceImpl implements MateriaService {
         this.profesorService = profesorServicio;
     }
     @Override
-    public Materia crearMateria(MateriaDto materiaDto) {
+    public Materia crearMateria(MateriaDto materiaDto){
         Materia materia = new Materia();
 
         Random random = new Random();
@@ -32,15 +34,28 @@ public class MateriaServiceImpl implements MateriaService {
 
         materia.setNombre(materiaDto.getNombre());
         materia.setAnio(materiaDto.getAnio());
-        materia.setListaCorrelatividades(materiaDto.getListaCorrelatividades());
-        System.out.println(materiaDto.getProfesorDni());
+        materia.setCuatrimestre(materiaDto.getCuatrimestre());
+
+        List<Materia> listaCorrelativas = new ArrayList<>();
+        List<Integer> correlatividadesDto = materiaDto.getListaCorrelatividades();
+
+        if(correlatividadesDto != null){
+            for(Integer i: correlatividadesDto){
+                try {
+                    Materia materiaCorrelativa = materiaDao.findMateria(i);
+                    listaCorrelativas.add(materiaCorrelativa);
+                } catch (MateriaNotFoundException e) {
+                    System.out.println("Materia id: " + i + "No encontrada");
+                }
+            }
+        }
+        materia.setListaCorrelatividades(listaCorrelativas);
 
         Profesor profesor = profesorService.findProfesor(materiaDto.getProfesorDni());
         materia.setProfesor(profesor);
 
         materiaDao.saveMateria(materia);
         return materia;
-
     }
 
     @Override

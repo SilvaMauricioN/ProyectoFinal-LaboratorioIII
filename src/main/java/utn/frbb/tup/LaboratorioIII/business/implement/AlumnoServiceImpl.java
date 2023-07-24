@@ -3,6 +3,7 @@ package utn.frbb.tup.LaboratorioIII.business.implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import utn.frbb.tup.LaboratorioIII.business.service.AlumnoService;
 import utn.frbb.tup.LaboratorioIII.business.service.AsignaturaService;
 import utn.frbb.tup.LaboratorioIII.model.Alumno;
@@ -59,5 +60,6 @@ public class AlumnoServiceImpl implements AlumnoService {
     public List<Alumno> buscarAlumno(String apellido) throws AlumnoNotFoundException {
         return alumnoDao.findAlumno(apellido);
     }
+    public void hola(){}
 
 }

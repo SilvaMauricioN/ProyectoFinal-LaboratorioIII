@@ -7,6 +7,7 @@ import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 
+
 import java.util.List;
 
 @RestController
@@ -19,13 +20,11 @@ public class MateriaController {
     }
     @GetMapping
     public List<Materia> getMaterias() {
-
         return (materiaService.getAllMaterias());
     }
-
-    @PostMapping( )
-    //request body, toma lo que viene del postman
-    public Materia crearMateria(@RequestBody MateriaDto materiaDto){
+    @PostMapping("/" )
+    //crear materia
+    public Materia crearMateria(@RequestBody MateriaDto materiaDto) throws MateriaNotFoundException {
         return materiaService.crearMateria(materiaDto);
     }
 

@@ -25,8 +25,6 @@ public class ProfesorDaoMemoryImpl implements ProfesorDao {
     @Override
     public Profesor findProfesor(Integer profesorDni){
         for(Profesor profesor: repositorioProfesor.values()){
-            System.out.println(profesorDni);
-            System.out.println(profesor.getDni());
             if(profesorDni.equals(profesor.getDni())){
                 return profesor;
             }

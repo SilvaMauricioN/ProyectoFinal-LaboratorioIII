@@ -1,7 +1,9 @@
 package utn.frbb.tup.LaboratorioIII.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MateriaDto {
@@ -10,7 +12,8 @@ public class MateriaDto {
     private int anio;
     private int cuatrimestre;
     private int profesorDni;
-    private List<Materia> ListaCorrelatividades;
+    @JsonProperty("ListaCorrelatividades")
+    private List<Integer> ListaCorrelatividades = new ArrayList<>();
 
     public int getMateriaId() {
         return materiaId;
@@ -52,12 +55,16 @@ public class MateriaDto {
         this.profesorDni = profesorDni;
     }
 
-    public List<Materia> getListaCorrelatividades() {
+    public List<Integer> getListaCorrelatividades() {
         return ListaCorrelatividades;
     }
 
-    public void setListaCorrelatividades(List<Materia> listaCorrelatividades) {
-        this.ListaCorrelatividades = listaCorrelatividades;
+    @JsonProperty
+    public void setListaCorrelatividades(List<Integer> listaCorrelatividades) {
+        if (listaCorrelatividades == null) {
+            this.ListaCorrelatividades = new ArrayList<>();
+        } else {
+            this.ListaCorrelatividades = listaCorrelatividades;
+        }
     }
-
 }
