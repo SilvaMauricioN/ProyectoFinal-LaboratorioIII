@@ -8,12 +8,11 @@ import utn.frbb.tup.LaboratorioIII.business.service.ProfesorService;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
+import utn.frbb.tup.LaboratorioIII.model.dto.MateriaResponse;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.MateriaDao;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class MateriaServiceImpl implements MateriaService {
@@ -26,11 +25,11 @@ public class MateriaServiceImpl implements MateriaService {
         this.profesorService = profesorServicio;
     }
     @Override
-    public Materia crearMateria(MateriaDto materiaDto){
+    public MateriaResponse crearMateria(MateriaDto materiaDto) throws MateriaNotFoundException {
         Materia materia = new Materia();
-
-        Random random = new Random();
-        materia.setMateriaId(random.nextInt(99) + 1);
+//
+//        Random random = new Random();
+       // materia.setMateriaId(2);
 
         materia.setNombre(materiaDto.getNombre());
         materia.setAnio(materiaDto.getAnio());
@@ -39,13 +38,20 @@ public class MateriaServiceImpl implements MateriaService {
         List<Materia> listaCorrelativas = new ArrayList<>();
         List<Integer> correlatividadesDto = materiaDto.getListaCorrelatividades();
 
+        List <Map<String,String>> listaErrores = new ArrayList<>();
+
+
         if(correlatividadesDto != null){
             for(Integer i: correlatividadesDto){
                 try {
                     Materia materiaCorrelativa = materiaDao.findMateria(i);
                     listaCorrelativas.add(materiaCorrelativa);
                 } catch (MateriaNotFoundException e) {
-                    System.out.println("Materia id: " + i + "No encontrada");
+                    Map<String,String> error = new HashMap<>(){{
+                        put("Materia Id",String.valueOf(i));
+                        put("Mensaje",e.getMessage());
+                    }};
+                    listaErrores.add(error);
                 }
             }
         }
@@ -55,7 +61,7 @@ public class MateriaServiceImpl implements MateriaService {
         materia.setProfesor(profesor);
 
         materiaDao.saveMateria(materia);
-        return materia;
+        return new MateriaResponse(materia,listaErrores);
     }
 
     @Override

@@ -6,7 +6,7 @@ import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import java.util.List;
 
 public interface MateriaDao {
-    void saveMateria(Materia materia);
+    void saveMateria(Materia materia) throws MateriaNotFoundException;
     Materia findMateria(Integer materiaId) throws MateriaNotFoundException;
     List<Materia> getAllMaterias();
 

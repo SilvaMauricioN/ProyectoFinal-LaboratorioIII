@@ -3,8 +3,10 @@ package utn.frbb.tup.LaboratorioIII.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Materia {
+
     private int materiaId;
     private String nombre;
     private int anio;
@@ -18,6 +20,19 @@ public class Materia {
         this.nombre = nombre;
         this.profesor = profesor;
         listaCorrelatividades = new ArrayList<>();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Materia materia = (Materia) o;
+        return anio == materia.anio && cuatrimestre == materia.cuatrimestre && Objects.equals(nombre, materia.nombre) && Objects.equals(profesor, materia.profesor) && Objects.equals(listaCorrelatividades, materia.listaCorrelatividades);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(materiaId, nombre, anio, cuatrimestre);
     }
 
     public int getMateriaId() {

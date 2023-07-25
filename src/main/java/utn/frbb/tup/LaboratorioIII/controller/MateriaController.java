@@ -5,10 +5,12 @@ import org.springframework.web.bind.annotation.*;
 import utn.frbb.tup.LaboratorioIII.business.service.MateriaService;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
+import utn.frbb.tup.LaboratorioIII.model.dto.MateriaResponse;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("Materia")
@@ -24,7 +26,7 @@ public class MateriaController {
     }
     @PostMapping("/" )
     //crear materia
-    public Materia crearMateria(@RequestBody MateriaDto materiaDto) throws MateriaNotFoundException {
+    public MateriaResponse crearMateria(@RequestBody MateriaDto materiaDto) throws MateriaNotFoundException {
         return materiaService.crearMateria(materiaDto);
     }
 
@@ -33,6 +35,8 @@ public class MateriaController {
     public Materia buscarMateria(@PathVariable("materiaId") int materiaId) throws MateriaNotFoundException {
         return materiaService.findMateria(materiaId);
     }
+
+
 
 
 }

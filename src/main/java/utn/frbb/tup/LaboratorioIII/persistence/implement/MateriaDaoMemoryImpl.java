@@ -1,5 +1,6 @@
 package utn.frbb.tup.LaboratorioIII.persistence.implement;
 
+
 import org.springframework.stereotype.Component;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
@@ -13,20 +14,26 @@ import java.util.Map;
 @Component
 public class MateriaDaoMemoryImpl implements MateriaDao {
     private final Map<Integer, Materia> repositorioMateria = new HashMap<>();
-    public MateriaDaoMemoryImpl(){
+    private static int nextId = 1;
+    private MateriaDaoMemoryImpl(){
         inicializarMateria();
     }
-    private void inicializarMateria() {
-        Materia m = new Materia("laboratorio I", 2, 1, new Profesor("Lucho", "Salotto", "Lic",3216598));
-        Materia m1 = new Materia("laboratorio II", 2, 1, new Profesor("Juan", "Perez", "Lic",587461));
-        m.setMateriaId(5555);
-        m1.setMateriaId(5556);
-        saveMateria(m);
-        saveMateria(m1);
+    private void inicializarMateria(){
+        Materia m = new Materia("laboratorio I", 1, 1, new Profesor("Lucho", "Salotto", "Lic",3216598));
+        Materia m1 = new Materia("laboratorio II", 1, 1, new Profesor("Juan", "Perez", "Lic",587461));
+        m.setMateriaId(nextId++);
+        m1.setMateriaId(nextId++);
+        repositorioMateria.put(m.getMateriaId(),m);
+        repositorioMateria.put(m1.getMateriaId(), m1);
     }
     @Override
-    public void saveMateria(Materia materia) {
-        repositorioMateria.put(materia.getMateriaId(), materia);
+    public void saveMateria(Materia materia) throws MateriaNotFoundException {
+        if(!repositorioMateria.containsValue(materia)){
+            materia.setMateriaId(nextId++);
+            repositorioMateria.put(materia.getMateriaId(), materia);
+        }else{
+            throw new MateriaNotFoundException("LA MATERIA YA EXISTE");
+        }
     }
     @Override
     public Materia findMateria(Integer materiaId) throws MateriaNotFoundException {
@@ -36,7 +43,7 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
                 return materia;
             }
         }
-        throw new MateriaNotFoundException("Materia No Encontrada");
+        throw new MateriaNotFoundException("MATERIA NO ENCOTRADA");
     }
     @Override
     public List<Materia> getAllMaterias() {
