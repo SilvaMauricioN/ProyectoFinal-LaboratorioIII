@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class Materia {
-
     private int materiaId;
     private String nombre;
     private int anio;

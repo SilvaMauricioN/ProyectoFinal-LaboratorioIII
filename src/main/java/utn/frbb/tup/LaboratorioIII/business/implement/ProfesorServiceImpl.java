@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frbb.tup.LaboratorioIII.business.service.ProfesorService;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
+import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.ProfesorDao;
 
 import java.util.List;
@@ -18,8 +19,15 @@ public class ProfesorServiceImpl implements ProfesorService {
         this.profesorDao = profesorDao;
     }
     @Override
-    public Profesor crearProfesor(Profesor profesor) {
-    return null;
+    public Profesor crearProfesor(ProfesorDto profesorDto) {
+        Profesor profesor = new Profesor();
+        profesor.setNombre(profesorDto.getNombre());
+        profesor.setApellido(profesorDto.getApellido());
+        profesor.setDni(profesorDto.getDni());
+        profesor.setTitulo(profesorDto.getTitulo());
+        //profesor.setMateriasDictadas();
+
+        return profesor;
     }
 
     @Override

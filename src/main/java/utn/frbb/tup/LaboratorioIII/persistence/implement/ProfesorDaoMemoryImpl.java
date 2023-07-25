@@ -9,14 +9,17 @@ import java.util.Map;
 @Component
 public class ProfesorDaoMemoryImpl implements ProfesorDao {
     private final Map<Integer, Profesor> repositorioProfesor= new HashMap<>();
+    private static int nextId = 1;
     public ProfesorDaoMemoryImpl(){
         inicializarProfesor();
     }
     private void inicializarProfesor() {
         Profesor p1 = new Profesor("Lucho", "Salotto", "Lic",3216598);
         Profesor p2 = new Profesor("Juan", "Perez", "Lic",5874613);
-        saveProfesor(p1);
-        saveProfesor(p2);
+        p1.setProfesorId(nextId++);
+        p2.setProfesorId(nextId++);
+        repositorioProfesor.put(p1.getProfesorId(), p1);
+        repositorioProfesor.put(p2.getProfesorId(),p2);
     }
     @Override
     public void saveProfesor(Profesor profesor) {

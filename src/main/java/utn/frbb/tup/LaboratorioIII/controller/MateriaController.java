@@ -7,10 +7,7 @@ import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaResponse;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
-
-
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("Materia")
@@ -29,14 +26,9 @@ public class MateriaController {
     public MateriaResponse crearMateria(@RequestBody MateriaDto materiaDto) throws MateriaNotFoundException {
         return materiaService.crearMateria(materiaDto);
     }
-
     //Buscar materia por identificador
     @GetMapping("/{materiaId}")
     public Materia buscarMateria(@PathVariable("materiaId") int materiaId) throws MateriaNotFoundException {
         return materiaService.findMateria(materiaId);
     }
-
-
-
-
 }
