@@ -1,6 +1,5 @@
 package utn.frbb.tup.LaboratorioIII.controller.handler;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,11 +10,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @ControllerAdvice
-public class GlobalHandler {
+public class GlobalResponseEntityExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, WebRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -33,7 +29,6 @@ public class GlobalHandler {
             error.setErrorMessage(ex.getMessage());
             body = error;
         }
-
         return new ResponseEntity<>(body, headers, status);
     }
 }

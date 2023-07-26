@@ -3,7 +3,7 @@ package utn.frbb.tup.LaboratorioIII.model.dto;
 public class AlumnoDto {
     String nombre;
     String apellido;
-    long dni;
+    Long dni;
 
     public String getNombre() {
         return nombre;
@@ -21,7 +21,7 @@ public class AlumnoDto {
         this.apellido = apellido;
     }
 
-    public long getDni() {
+    public Long getDni() {
         return dni;
     }
 

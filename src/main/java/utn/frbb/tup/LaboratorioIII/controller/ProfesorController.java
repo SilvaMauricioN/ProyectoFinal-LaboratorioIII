@@ -9,6 +9,8 @@ import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 
+import java.lang.reflect.Field;
+
 @RestController
 @RequestMapping("Profesor")
 public class ProfesorController {
@@ -18,7 +20,8 @@ public class ProfesorController {
     }
     @PostMapping("/" )
     //crear materia
-    public Profesor crearProfesor(@RequestBody ProfesorDto profesorDto) throws ProfesorException {
+    public Profesor crearProfesor(@RequestBody ProfesorDto profesorDto) throws ProfesorException, IllegalAccessException, NoSuchFieldException {
+        Validator.ValidarCampos(profesorDto);
         return profesorService.crearProfesor(profesorDto);
     }
 }

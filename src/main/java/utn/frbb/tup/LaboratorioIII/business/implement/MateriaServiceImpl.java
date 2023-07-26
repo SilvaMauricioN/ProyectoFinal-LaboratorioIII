@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import utn.frbb.tup.LaboratorioIII.business.service.MateriaService;
-import utn.frbb.tup.LaboratorioIII.business.service.ProfesorService;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
@@ -31,7 +30,7 @@ public class MateriaServiceImpl implements MateriaService {
 
         Materia materia = new Materia(
                 materiaDto.getNombre(),
-                materiaDto.getAnio(),
+                materiaDto.getYear(),
                 materiaDto.getCuatrimestre(),
                 profesor);
 

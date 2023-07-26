@@ -23,7 +23,8 @@ public class MateriaController {
     }
     @PostMapping("/" )
     //crear materia
-    public MateriaResponse crearMateria(@RequestBody MateriaDto materiaDto) throws MateriaNotFoundException {
+    public MateriaResponse crearMateria(@RequestBody MateriaDto materiaDto) throws MateriaNotFoundException, IllegalAccessException {
+        Validator.ValidarCampos(materiaDto);
         return materiaService.crearMateria(materiaDto);
     }
     //Buscar materia por identificador

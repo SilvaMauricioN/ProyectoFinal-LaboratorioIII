@@ -7,11 +7,10 @@ import utn.frbb.tup.LaboratorioIII.model.Materia;
 import java.util.List;
 
 public class ProfesorDto {
-
     private String nombre;
     private String apellido;
     private String titulo;
-    private int dni;
+    private Integer dni;
     private List<Integer> materiasDictadasID;
 
     public String getNombre() {
@@ -38,11 +37,11 @@ public class ProfesorDto {
         this.titulo = titulo;
     }
 
-    public int getDni() {
+    public Integer getDni() {
         return dni;
     }
 
-    public void setDni(int dni) {
+    public void setDni(Integer dni) {
         this.dni = dni;
     }
 
