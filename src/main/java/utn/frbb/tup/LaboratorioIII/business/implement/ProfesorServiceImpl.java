@@ -3,30 +3,45 @@ package utn.frbb.tup.LaboratorioIII.business.implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import utn.frbb.tup.LaboratorioIII.business.service.MateriaService;
 import utn.frbb.tup.LaboratorioIII.business.service.ProfesorService;
+import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
+import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
+import utn.frbb.tup.LaboratorioIII.persistence.dao.MateriaDao;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.ProfesorDao;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProfesorServiceImpl implements ProfesorService {
 
     private final ProfesorDao profesorDao;
+    private final MateriaService materiaService;
+    private final MateriaDao materiaDao;
     @Autowired
-    public ProfesorServiceImpl(ProfesorDao profesorDao){
+    public ProfesorServiceImpl(ProfesorDao profesorDao, MateriaDao materiaDao,MateriaService materiaService){
         this.profesorDao = profesorDao;
+        this.materiaDao = materiaDao;
+        this.materiaService = materiaService;
     }
     @Override
-    public Profesor crearProfesor(ProfesorDto profesorDto) {
-        Profesor profesor = new Profesor();
-        profesor.setNombre(profesorDto.getNombre());
-        profesor.setApellido(profesorDto.getApellido());
-        profesor.setDni(profesorDto.getDni());
-        profesor.setTitulo(profesorDto.getTitulo());
-        //profesor.setMateriasDictadas();
+    public Profesor crearProfesor(ProfesorDto profesorDto) throws ProfesorException {
+        Profesor profesor = new Profesor(profesorDto.getNombre(),
+                profesorDto.getApellido(),
+                profesorDto.getTitulo(),
+                profesorDto.getDni());
 
+        List<Integer> idMaterias = profesorDto.getMateriasDictadasID();
+        List <Map<String,String>> listaErrores = new ArrayList<>();
+        List<Materia> materiaDictadas = materiaService.getListaMateriaPorId(idMaterias,listaErrores);
+
+        profesor.setMateriasDictadas(materiaDictadas);
+        profesorDao.saveProfesor(profesor);
         return profesor;
     }
 

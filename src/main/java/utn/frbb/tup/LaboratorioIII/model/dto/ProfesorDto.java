@@ -1,10 +1,13 @@
 package utn.frbb.tup.LaboratorioIII.model.dto;
 
+import org.springframework.lang.NonNull;
+import org.springframework.lang.NonNullFields;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 
 import java.util.List;
 
 public class ProfesorDto {
+
     private String nombre;
     private String apellido;
     private String titulo;

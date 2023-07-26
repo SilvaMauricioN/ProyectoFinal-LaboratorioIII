@@ -2,6 +2,7 @@ package utn.frbb.tup.LaboratorioIII.persistence.implement;
 
 import org.springframework.stereotype.Component;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
+import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.ProfesorDao;
 
 import java.util.HashMap;
@@ -22,8 +23,14 @@ public class ProfesorDaoMemoryImpl implements ProfesorDao {
         repositorioProfesor.put(p2.getProfesorId(),p2);
     }
     @Override
-    public void saveProfesor(Profesor profesor) {
-        repositorioProfesor.put(profesor.getDni(),profesor);
+    public void saveProfesor(Profesor profesor) throws ProfesorException {
+        if(!repositorioProfesor.containsValue(profesor)){
+            profesor.setProfesorId(nextId++);
+            repositorioProfesor.put(profesor.getDni(),profesor);
+        }else{
+            throw new ProfesorException("PROFESOR YA GUARDADO");
+        }
+
     }
     @Override
     public Profesor findProfesor(Integer profesorDni){

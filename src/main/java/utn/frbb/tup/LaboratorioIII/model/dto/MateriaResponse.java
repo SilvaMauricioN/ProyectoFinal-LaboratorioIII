@@ -10,6 +10,6 @@ public record MateriaResponse(Materia materia, List<Map<String,String>> errores)
         if(errores.isEmpty()){
             return "OK";
         }
-        return "Correlatiba No Encontrada";
+        return "Correlativa No Encontrada";
     }
 }

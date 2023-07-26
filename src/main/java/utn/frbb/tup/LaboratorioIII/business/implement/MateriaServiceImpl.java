@@ -11,59 +11,38 @@ import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaResponse;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.MateriaDao;
+import utn.frbb.tup.LaboratorioIII.persistence.dao.ProfesorDao;
 
 import java.util.*;
 
 @Service
 public class MateriaServiceImpl implements MateriaService {
     private final MateriaDao materiaDao;
-    private final ProfesorService profesorService;
+    private final ProfesorDao profesorDao;
     //Inyeccion de dependencia por construcctor
     @Autowired
-    public MateriaServiceImpl(MateriaDao materiaDao, ProfesorService profesorServicio){
+    public MateriaServiceImpl(MateriaDao materiaDao, ProfesorDao profesorDao){
         this.materiaDao = materiaDao;
-        this.profesorService = profesorServicio;
+        this.profesorDao = profesorDao;
     }
     @Override
     public MateriaResponse crearMateria(MateriaDto materiaDto) throws MateriaNotFoundException {
-        Materia materia = new Materia();
-//
-//        Random random = new Random();
-       // materia.setMateriaId(2);
+        Profesor profesor = profesorDao.findProfesor(materiaDto.getProfesorDni());
 
-        materia.setNombre(materiaDto.getNombre());
-        materia.setAnio(materiaDto.getAnio());
-        materia.setCuatrimestre(materiaDto.getCuatrimestre());
+        Materia materia = new Materia(
+                materiaDto.getNombre(),
+                materiaDto.getAnio(),
+                materiaDto.getCuatrimestre(),
+                profesor);
 
-        List<Materia> listaCorrelativas = new ArrayList<>();
         List<Integer> correlatividadesDto = materiaDto.getListaCorrelatividades();
+        List <Map<String,String>> posiblesErrores = new ArrayList<>();
+        List<Materia> listaCorrelativas = getListaMateriaPorId(correlatividadesDto,posiblesErrores);
 
-        List <Map<String,String>> listaErrores = new ArrayList<>();
-
-
-        if(correlatividadesDto != null){
-            for(Integer i: correlatividadesDto){
-                try {
-                    Materia materiaCorrelativa = materiaDao.findMateria(i);
-                    listaCorrelativas.add(materiaCorrelativa);
-                } catch (MateriaNotFoundException e) {
-                    Map<String,String> error = new HashMap<>(){{
-                        put("Materia Id",String.valueOf(i));
-                        put("Mensaje",e.getMessage());
-                    }};
-                    listaErrores.add(error);
-                }
-            }
-        }
         materia.setListaCorrelatividades(listaCorrelativas);
-
-        Profesor profesor = profesorService.findProfesor(materiaDto.getProfesorDni());
-        materia.setProfesor(profesor);
-
         materiaDao.saveMateria(materia);
-        return new MateriaResponse(materia,listaErrores);
+        return new MateriaResponse(materia,posiblesErrores);
     }
-
     @Override
     public List<Materia> getAllMaterias() {
         return (materiaDao.getAllMaterias());
@@ -72,5 +51,23 @@ public class MateriaServiceImpl implements MateriaService {
     @Override
     public Materia findMateria(int materiaId) throws MateriaNotFoundException {
         return materiaDao.findMateria(materiaId);
+    }
+    public List<Materia> getListaMateriaPorId(List<Integer> listaId,List<Map<String,String>> Errores){
+        List<Materia> listaMaterias = new ArrayList<>();
+        if (listaId != null){
+            for(Integer i:listaId){
+                try {
+                    Materia materiaDictada = materiaDao.findMateria(i);
+                    listaMaterias.add(materiaDictada);
+                } catch (MateriaNotFoundException e) {
+                    Map<String,String> error = new HashMap<>(){{
+                        put("Materia Id",String.valueOf(i));
+                        put("Mensaje", e.getMessage());
+                    }};
+                    Errores.add(error);
+                }
+            }
+        }
+        return listaMaterias;
     }
 }

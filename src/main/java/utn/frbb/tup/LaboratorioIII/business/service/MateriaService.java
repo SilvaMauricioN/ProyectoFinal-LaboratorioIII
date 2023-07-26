@@ -8,6 +8,7 @@ import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 
 
 import java.util.List;
+import java.util.Map;
 
 public interface MateriaService {
     MateriaResponse crearMateria(MateriaDto inputData) throws MateriaNotFoundException;
@@ -15,4 +16,5 @@ public interface MateriaService {
     List<Materia> getAllMaterias();
 
     Materia findMateria(int materiaId) throws MateriaNotFoundException;
+    List<Materia> getListaMateriaPorId(List<Integer> listaId,List<Map<String,String>> Errores);
 }
