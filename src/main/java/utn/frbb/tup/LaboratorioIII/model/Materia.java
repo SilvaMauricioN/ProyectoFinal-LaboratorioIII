@@ -1,6 +1,8 @@
 package utn.frbb.tup.LaboratorioIII.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -10,7 +12,9 @@ public class Materia {
     private String nombre;
     private int anio;
     private int cuatrimestre;
+    @JsonManagedReference
     private Profesor profesor;
+    @JsonManagedReference
     private List<Materia> listaCorrelatividades;
     public Materia(){}
     public Materia(String nombre, int anio, int cuatrimestre, Profesor profesor) {

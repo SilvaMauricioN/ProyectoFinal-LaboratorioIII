@@ -5,7 +5,9 @@ import org.springframework.stereotype.Component;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
+import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.MateriaDao;
+import utn.frbb.tup.LaboratorioIII.persistence.dao.ProfesorDao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,13 +16,25 @@ import java.util.Map;
 @Component
 public class MateriaDaoMemoryImpl implements MateriaDao {
     private final Map<Integer, Materia> repositorioMateria = new HashMap<>();
+    private final ProfesorDao profesorDao;
     private static int nextId = 1;
-    private MateriaDaoMemoryImpl(){
+    private MateriaDaoMemoryImpl(ProfesorDao profesorDao){
+        this.profesorDao = profesorDao;
         inicializarMateria();
     }
     private void inicializarMateria(){
-        Materia m = new Materia("laboratorio I", 1, 1, new Profesor("Lucho", "Salotto", "Lic",3216598));
-        Materia m1 = new Materia("laboratorio II", 1, 1, new Profesor("Juan", "Perez", "Lic",587461));
+        Profesor p1 = null;
+        Profesor p2 = null;
+
+        try {
+            p1 = profesorDao.findProfesor(1);
+            p2 = profesorDao.findProfesor(2);
+        } catch (ProfesorException e) {
+            throw new RuntimeException(e);
+        }
+
+        Materia m = new Materia("laboratorio I", 1, 1,p1);
+        Materia m1 = new Materia("laboratorio II", 1, 1, p2);
         m.setMateriaId(nextId++);
         m1.setMateriaId(nextId++);
         repositorioMateria.put(m.getMateriaId(),m);

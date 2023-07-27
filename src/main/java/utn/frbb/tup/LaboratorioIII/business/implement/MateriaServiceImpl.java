@@ -9,6 +9,7 @@ import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaResponse;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
+import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.MateriaDao;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.ProfesorDao;
 
@@ -25,7 +26,7 @@ public class MateriaServiceImpl implements MateriaService {
         this.profesorDao = profesorDao;
     }
     @Override
-    public MateriaResponse crearMateria(MateriaDto materiaDto) throws MateriaNotFoundException {
+    public MateriaResponse crearMateria(MateriaDto materiaDto) throws MateriaNotFoundException, ProfesorException {
         Profesor profesor = profesorDao.findProfesor(materiaDto.getProfesorDni());
 
         Materia materia = new Materia(

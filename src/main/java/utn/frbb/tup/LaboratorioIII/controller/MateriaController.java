@@ -7,6 +7,8 @@ import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaResponse;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
+import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
+
 import java.util.List;
 
 @RestController
@@ -23,7 +25,7 @@ public class MateriaController {
     }
     @PostMapping("/" )
     //crear materia
-    public MateriaResponse crearMateria(@RequestBody MateriaDto materiaDto) throws MateriaNotFoundException, IllegalAccessException {
+    public MateriaResponse crearMateria(@RequestBody MateriaDto materiaDto) throws MateriaNotFoundException, IllegalAccessException, ProfesorException {
         Validator.ValidarCampos(materiaDto);
         return materiaService.crearMateria(materiaDto);
     }

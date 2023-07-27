@@ -13,5 +13,7 @@ public interface ProfesorService {
 
     Profesor crearProfesor(ProfesorDto profesorDto) throws ProfesorException;
     List<Profesor> getAllProfesor();
-    Profesor findProfesor(int profesorDni);
+    Profesor findProfesor(int profesorDni) throws ProfesorException;
+
+    Profesor actualizarProfesor(Integer id, ProfesorDto profesorDto) throws ProfesorException;
 }

@@ -5,13 +5,14 @@ import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaResponse;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
+import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 
 
 import java.util.List;
 import java.util.Map;
 
 public interface MateriaService {
-    MateriaResponse crearMateria(MateriaDto inputData) throws MateriaNotFoundException;
+    MateriaResponse crearMateria(MateriaDto inputData) throws MateriaNotFoundException, ProfesorException;
 
     List<Materia> getAllMaterias();
 

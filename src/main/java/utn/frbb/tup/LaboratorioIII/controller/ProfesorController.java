@@ -1,15 +1,13 @@
 package utn.frbb.tup.LaboratorioIII.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import utn.frbb.tup.LaboratorioIII.business.service.ProfesorService;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 @RestController
 @RequestMapping("Profesor")
@@ -24,4 +22,15 @@ public class ProfesorController {
         Validator.ValidarCampos(profesorDto);
         return profesorService.crearProfesor(profesorDto);
     }
+    @PutMapping("/{profesorId}")
+    public Profesor actualizarProfesor(@PathVariable("profesorId") Integer id,@RequestBody ProfesorDto profesorDto) throws IllegalAccessException, ProfesorException {
+        Validator.ValidarCampos(profesorDto);
+        return profesorService.actualizarProfesor(id,profesorDto);
+    }
+    @GetMapping
+    public List<Profesor> getProfesores(){
+        return profesorService.getAllProfesor();
+
+    }
+
 }

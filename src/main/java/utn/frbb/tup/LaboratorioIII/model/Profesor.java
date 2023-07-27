@@ -1,5 +1,7 @@
 package utn.frbb.tup.LaboratorioIII.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.util.List;
 
 public class Profesor {
@@ -8,6 +10,7 @@ public class Profesor {
     private String apellido;
     private String titulo;
     private int dni;
+    @JsonBackReference
     private List<Materia> materiasDictadas;
     public Profesor(){}
     public Profesor(String nombre, String apellido, String titulo, int dni) {

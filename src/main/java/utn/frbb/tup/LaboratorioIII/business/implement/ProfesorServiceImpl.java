@@ -47,11 +47,29 @@ public class ProfesorServiceImpl implements ProfesorService {
 
     @Override
     public List<Profesor> getAllProfesor() {
-    return null;
+        return profesorDao.getAllProfesores();
     }
 
-    public Profesor findProfesor(int profesorDni){
+    public Profesor findProfesor(int profesorDni) throws ProfesorException {
         return profesorDao.findProfesor(profesorDni);
+    }
+
+    @Override
+    public Profesor actualizarProfesor(Integer id, ProfesorDto profesorDto) throws ProfesorException {
+        Profesor profesor = profesorDao.findProfesor(id);
+
+        profesor.setNombre(profesorDto.getNombre());
+        profesor.setApellido(profesorDto.getApellido());
+        profesor.setTitulo(profesorDto.getTitulo());
+        profesor.setDni(profesorDto.getDni());
+
+        List <Map<String,String>> listaErrores = new ArrayList<>();
+        List<Materia> materiasDictadas = materiaService.getListaMateriaPorId(profesorDto.getMateriasDictadasID(),listaErrores);
+
+        profesor.setMateriasDictadas(materiasDictadas);
+
+        profesorDao.upDateProfesor(profesor);
+        return profesor;
     }
 
 }
