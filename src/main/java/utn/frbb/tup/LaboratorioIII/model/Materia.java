@@ -1,20 +1,21 @@
 package utn.frbb.tup.LaboratorioIII.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "materiaId")
 public class Materia {
     private int materiaId;
     private String nombre;
     private int anio;
     private int cuatrimestre;
-    @JsonManagedReference
     private Profesor profesor;
-    @JsonManagedReference
     private List<Materia> listaCorrelatividades;
     public Materia(){}
     public Materia(String nombre, int anio, int cuatrimestre, Profesor profesor) {
