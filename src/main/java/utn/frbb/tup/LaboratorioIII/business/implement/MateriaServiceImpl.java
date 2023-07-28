@@ -27,21 +27,11 @@ public class MateriaServiceImpl implements MateriaService {
     }
     @Override
     public MateriaResponse crearMateria(MateriaDto materiaDto) throws MateriaNotFoundException, ProfesorException {
-        Profesor profesor = profesorDao.findProfesor(materiaDto.getProfesorId());
+        Materia materia = new Materia();
+        List<Map<String, String>> errores = castingDtoMateria(materia, materiaDto);
 
-        Materia materia = new Materia(
-                materiaDto.getNombre(),
-                materiaDto.getYear(),
-                materiaDto.getCuatrimestre(),
-                profesor);
-
-        List<Integer> correlatividadesDto = materiaDto.getListaCorrelatividades();
-        List <Map<String,String>> posiblesErrores = new ArrayList<>();
-        List<Materia> listaCorrelativas = getListaMateriaPorId(correlatividadesDto,posiblesErrores);
-
-        materia.setListaCorrelatividades(listaCorrelativas);
         materiaDao.saveMateria(materia);
-        return new MateriaResponse(materia,posiblesErrores);
+        return new MateriaResponse(materia,errores);
     }
     @Override
     public List<Materia> getAllMaterias() {
@@ -57,26 +47,28 @@ public class MateriaServiceImpl implements MateriaService {
     public Materia actualizarMateria(Integer id,MateriaDto materiaDto) throws MateriaNotFoundException, ProfesorException {
         Materia materia = materiaDao.findMateria(id);
 
-        if(materia != null){
-            materia.setNombre(materiaDto.getNombre());
-            materia.setAnio(materiaDto.getYear());
-            materia.setCuatrimestre(materiaDto.getCuatrimestre());
+        List<Map<String, String>> errores = castingDtoMateria(materia, materiaDto);
+        materiaDao.upDateMateria(materia);
 
-            Profesor profesor = profesorDao.findProfesor(materiaDto.getProfesorId());
-            materia.setProfesor(profesor);
-
-            List<Integer> correlatividadesDto = materiaDto.getListaCorrelatividades();
-            List <Map<String,String>> posiblesErrores = new ArrayList<>();
-            List<Materia> listaCorrelativas = getListaMateriaPorId(correlatividadesDto,posiblesErrores);
-
-            materia.setListaCorrelatividades(listaCorrelativas);
-
-            materiaDao.upDateMateria(materia);
-        }else{
-            throw new MateriaNotFoundException("NO SE ENCONTROLA MATERIA A ACTUALIZAR");
-
-        }
         return materia;
+    }
+
+
+    private List<Map<String, String>> castingDtoMateria(Materia materia, MateriaDto materiaDto) throws ProfesorException {
+        Profesor profesor = profesorDao.findProfesor(materiaDto.getProfesorId());
+
+        materia.setProfesor(profesor);
+        materia.setNombre(materiaDto.getNombre());
+        materia.setAnio(materiaDto.getYear());
+        materia.setCuatrimestre(materiaDto.getCuatrimestre());
+
+        List<Integer> correlatividadesDtoId = materiaDto.getListaCorrelatividades();
+        List <Map<String,String>> posiblesErrores = new ArrayList<>();
+        List<Materia> listaCorrelativas = getListaMateriaPorId(correlatividadesDtoId,posiblesErrores);
+
+        materia.setListaCorrelatividades(listaCorrelativas);
+
+        return posiblesErrores;
     }
     public List<Materia> getListaMateriaPorId(List<Integer> listaId,List<Map<String,String>> Errores){
         List<Materia> listaMaterias = new ArrayList<>();
@@ -96,9 +88,7 @@ public class MateriaServiceImpl implements MateriaService {
         }
         return listaMaterias;
     }
-
-    private void actualizarMateriaEnProfesor(Integer id, Materia materia){
-
-
-    }
+//    private void actualizarMateriaEnProfesor(Integer id, Materia materia){
+//
+//    }
 }
