@@ -9,7 +9,7 @@ public class MateriaDto {
     private String nombre;
     private Integer year;
     private Integer cuatrimestre;
-    private Integer profesorDni;
+    private Integer profesorId;
     @JsonProperty("ListaCorrelatividades")
     private List<Integer> ListaCorrelatividades = new ArrayList<>();
     public String getNombre() {
@@ -30,11 +30,11 @@ public class MateriaDto {
     public void setCuatrimestre(Integer cuatrimestre) {
         this.cuatrimestre = cuatrimestre;
     }
-    public Integer getProfesorDni() {
-        return profesorDni;
+    public Integer getProfesorId() {
+        return profesorId;
     }
-    public void setProfesorDni(Integer profesorDni) {
-        this.profesorDni = profesorDni;
+    public void setProfesorId(Integer profesorId) {
+        this.profesorId = profesorId;
     }
     public List<Integer> getListaCorrelatividades() {
         return ListaCorrelatividades;

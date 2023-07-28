@@ -27,7 +27,7 @@ public class MateriaServiceImpl implements MateriaService {
     }
     @Override
     public MateriaResponse crearMateria(MateriaDto materiaDto) throws MateriaNotFoundException, ProfesorException {
-        Profesor profesor = profesorDao.findProfesor(materiaDto.getProfesorDni());
+        Profesor profesor = profesorDao.findProfesor(materiaDto.getProfesorId());
 
         Materia materia = new Materia(
                 materiaDto.getNombre(),
@@ -52,6 +52,32 @@ public class MateriaServiceImpl implements MateriaService {
     public Materia findMateria(int materiaId) throws MateriaNotFoundException {
         return materiaDao.findMateria(materiaId);
     }
+
+    @Override
+    public Materia actualizarMateria(Integer id,MateriaDto materiaDto) throws MateriaNotFoundException, ProfesorException {
+        Materia materia = materiaDao.findMateria(id);
+
+        if(materia != null){
+            materia.setNombre(materiaDto.getNombre());
+            materia.setAnio(materiaDto.getYear());
+            materia.setCuatrimestre(materiaDto.getCuatrimestre());
+
+            Profesor profesor = profesorDao.findProfesor(materiaDto.getProfesorId());
+            materia.setProfesor(profesor);
+
+            List<Integer> correlatividadesDto = materiaDto.getListaCorrelatividades();
+            List <Map<String,String>> posiblesErrores = new ArrayList<>();
+            List<Materia> listaCorrelativas = getListaMateriaPorId(correlatividadesDto,posiblesErrores);
+
+            materia.setListaCorrelatividades(listaCorrelativas);
+
+            materiaDao.upDateMateria(materia);
+        }else{
+            throw new MateriaNotFoundException("NO SE ENCONTROLA MATERIA A ACTUALIZAR");
+
+        }
+        return materia;
+    }
     public List<Materia> getListaMateriaPorId(List<Integer> listaId,List<Map<String,String>> Errores){
         List<Materia> listaMaterias = new ArrayList<>();
         if (listaId != null){
@@ -69,5 +95,10 @@ public class MateriaServiceImpl implements MateriaService {
             }
         }
         return listaMaterias;
+    }
+
+    private void actualizarMateriaEnProfesor(Integer id, Materia materia){
+
+
     }
 }

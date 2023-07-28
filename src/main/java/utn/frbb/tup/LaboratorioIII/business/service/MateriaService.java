@@ -18,4 +18,5 @@ public interface MateriaService {
 
     Materia findMateria(int materiaId) throws MateriaNotFoundException;
     List<Materia> getListaMateriaPorId(List<Integer> listaId,List<Map<String,String>> Errores);
+    Materia actualizarMateria(Integer id,MateriaDto materiaDto) throws MateriaNotFoundException, ProfesorException;
 }

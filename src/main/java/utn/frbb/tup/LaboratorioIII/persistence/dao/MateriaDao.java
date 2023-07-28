@@ -10,4 +10,5 @@ public interface MateriaDao {
     Materia findMateria(Integer materiaId) throws MateriaNotFoundException;
     List<Materia> getAllMaterias();
 
+    void upDateMateria(Materia materia);
 }
