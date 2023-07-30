@@ -2,7 +2,6 @@ package utn.frbb.tup.LaboratorioIII.business.implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import utn.frbb.tup.LaboratorioIII.business.service.MateriaService;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
@@ -12,14 +11,12 @@ import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.MateriaDao;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.ProfesorDao;
-
 import java.util.*;
 
 @Service
 public class MateriaServiceImpl implements MateriaService {
     private final MateriaDao materiaDao;
     private final ProfesorDao profesorDao;
-    //Inyeccion de dependencia por construcctor
     @Autowired
     public MateriaServiceImpl(MateriaDao materiaDao, ProfesorDao profesorDao){
         this.materiaDao = materiaDao;
@@ -29,6 +26,9 @@ public class MateriaServiceImpl implements MateriaService {
     public MateriaResponse crearMateria(MateriaDto materiaDto) throws MateriaNotFoundException, ProfesorException {
         Materia materia = new Materia();
         List<Map<String, String>> errores = castingDtoMateria(materia, materiaDto);
+
+        Profesor profesor = profesorDao.findProfesor(materiaDto.getProfesorId());
+        materia.setProfesor(profesor);
 
         materiaDao.saveMateria(materia);
         return new MateriaResponse(materia,errores);
@@ -46,18 +46,23 @@ public class MateriaServiceImpl implements MateriaService {
     @Override
     public Materia actualizarMateria(Integer id,MateriaDto materiaDto) throws MateriaNotFoundException, ProfesorException {
         Materia materia = materiaDao.findMateria(id);
-
-        List<Map<String, String>> errores = castingDtoMateria(materia, materiaDto);
-        materiaDao.upDateMateria(materia);
-
-        return materia;
-    }
-
-
-    private List<Map<String, String>> castingDtoMateria(Materia materia, MateriaDto materiaDto) throws ProfesorException {
         Profesor profesor = profesorDao.findProfesor(materiaDto.getProfesorId());
 
+        if(!materia.getProfesor().equals(profesor)){
+            Profesor p = materia.getProfesor();
+            List <Materia> listaMateria =  p.getMateriasDictadas();
+            listaMateria.remove(materia);
+
+            profesorDao.upDateProfesor(p);
+        }
+
+        List<Map<String, String>> errores = castingDtoMateria(materia, materiaDto);
         materia.setProfesor(profesor);
+        materiaDao.upDateMateria(materia);
+        return materia;
+    }
+    private List<Map<String, String>> castingDtoMateria(Materia materia, MateriaDto materiaDto){
+
         materia.setNombre(materiaDto.getNombre());
         materia.setAnio(materiaDto.getYear());
         materia.setCuatrimestre(materiaDto.getCuatrimestre());
@@ -65,7 +70,6 @@ public class MateriaServiceImpl implements MateriaService {
         List<Integer> correlatividadesDtoId = materiaDto.getListaCorrelatividades();
         List <Map<String,String>> posiblesErrores = new ArrayList<>();
         List<Materia> listaCorrelativas = getListaMateriaPorId(correlatividadesDtoId,posiblesErrores);
-
         materia.setListaCorrelatividades(listaCorrelativas);
 
         return posiblesErrores;
@@ -88,7 +92,4 @@ public class MateriaServiceImpl implements MateriaService {
         }
         return listaMaterias;
     }
-//    private void actualizarMateriaEnProfesor(Integer id, Materia materia){
-//
-//    }
 }

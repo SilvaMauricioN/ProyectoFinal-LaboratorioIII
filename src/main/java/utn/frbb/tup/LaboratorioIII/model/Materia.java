@@ -12,6 +12,7 @@ public class Materia {
     private String nombre;
     private int anio;
     private int cuatrimestre;
+   // @JsonBackReference
     private Profesor profesor;
     private List<Materia> listaCorrelatividades;
     public Materia(){}
@@ -22,20 +23,11 @@ public class Materia {
         this.profesor = profesor;
         listaCorrelatividades = new ArrayList<>();
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Materia materia = (Materia) o;
-        return anio == materia.anio && cuatrimestre == materia.cuatrimestre && Objects.equals(nombre, materia.nombre) && Objects.equals(profesor, materia.profesor) && Objects.equals(listaCorrelatividades, materia.listaCorrelatividades);
+    public Materia(String nombre, int anio, int cuatrimestre) {
+        this.nombre = nombre;
+        this.anio = anio;
+        this.cuatrimestre = cuatrimestre;
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(materiaId, nombre, anio, cuatrimestre);
-    }
-
     public int getMateriaId() {
         return materiaId;
     }
@@ -71,16 +63,39 @@ public class Materia {
     public Profesor getProfesor() {
         return profesor;
     }
-
     public void setProfesor(Profesor profesor) {
         this.profesor = profesor;
+        if (profesor != null && !profesor.getMateriasDictadas().contains(this)) {
+            profesor.setMateria(this);
+        }
     }
-
     public List<Materia> getListaCorrelatividades() {
         return listaCorrelatividades;
     }
 
     public void setListaCorrelatividades(List<Materia> listaCorrelatividades) {
         this.listaCorrelatividades = listaCorrelatividades;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Materia materia = (Materia) o;
+        return anio == materia.anio && cuatrimestre == materia.cuatrimestre && Objects.equals(nombre, materia.nombre) && Objects.equals(profesor, materia.profesor) && Objects.equals(listaCorrelatividades, materia.listaCorrelatividades);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(materiaId, nombre, anio, cuatrimestre);
+    }
+    @Override
+    public String toString() {
+        return "Materia{" +
+                "materiaId=" + materiaId +
+                ", nombre='" + nombre + '\'' +
+                ", anio=" + anio +
+                ", cuatrimestre=" + cuatrimestre +
+                ", profesor=" + profesor +
+                ", listaCorrelatividades=" + listaCorrelatividades +
+                '}';
     }
 }

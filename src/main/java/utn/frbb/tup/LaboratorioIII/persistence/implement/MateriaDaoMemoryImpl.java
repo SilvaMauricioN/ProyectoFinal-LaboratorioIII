@@ -24,9 +24,9 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
         this.profesorDao = profesorDao;
         inicializarMateria();
     }
-    private void inicializarMateria(){
-//        Profesor p1 = null;
-//        Profesor p2 = null;
+    private synchronized void inicializarMateria(){
+//        Profesor p1;
+//        Profesor p2;
 //
 //        try {
 //            p1 = profesorDao.findProfesor(1);
@@ -35,15 +35,19 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
 //            throw new RuntimeException(e);
 //        }
 
-        Materia m = new Materia("laboratorio I", 1, 1,null);
-        Materia m1 = new Materia("laboratorio II", 1, 1, null);
+        Materia m = new Materia("laboratorio I", 1, 1);
+        Materia m1 = new Materia("laboratorio II", 1, 1);
+//
+//        m.setProfesor(p1);
+//        m1.setProfesor(p2);
+
         m.setMateriaId(generadorId.getIdNuevo());
         m1.setMateriaId(generadorId.getIdNuevo());
         repositorioMateria.put(m.getMateriaId(),m);
         repositorioMateria.put(m1.getMateriaId(), m1);
     }
     @Override
-    public void saveMateria(Materia materia) throws MateriaNotFoundException {
+    public synchronized void saveMateria(Materia materia) throws MateriaNotFoundException {
         if(!repositorioMateria.containsValue(materia)){
             materia.setMateriaId(generadorId.getIdNuevo());
             repositorioMateria.put(materia.getMateriaId(), materia);
@@ -52,7 +56,7 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
         }
     }
     @Override
-    public Materia findMateria(Integer materiaId) throws MateriaNotFoundException {
+    public synchronized Materia findMateria(Integer materiaId) throws MateriaNotFoundException {
 
         for(Materia materia:repositorioMateria.values()){
             if (materiaId.equals(materia.getMateriaId())){
@@ -62,7 +66,7 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
         throw new MateriaNotFoundException("MATERIA NO ENCOTRADA");
     }
     @Override
-    public List<Materia> getAllMaterias() {
+    public synchronized List<Materia> getAllMaterias() {
         List<Materia> listaMaterias;
         listaMaterias = new ArrayList<>(repositorioMateria.values());
 
@@ -70,7 +74,7 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
     }
 
     @Override
-    public void upDateMateria(Materia materia) {
+    public synchronized void upDateMateria(Materia materia) {
         repositorioMateria.put(materia.getMateriaId(),materia);
     }
 }

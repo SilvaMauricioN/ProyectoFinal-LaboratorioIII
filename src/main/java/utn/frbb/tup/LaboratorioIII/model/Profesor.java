@@ -2,6 +2,7 @@ package utn.frbb.tup.LaboratorioIII.model;
 
 import com.fasterxml.jackson.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "profesorId")
 public class Profesor {
@@ -10,13 +11,17 @@ public class Profesor {
     private String apellido;
     private String titulo;
     private int dni;
+   // @JsonManagedReference
     private List<Materia> materiasDictadas;
-    public Profesor(){}
+    public Profesor(){
+        this.materiasDictadas = new ArrayList<>();
+    }
     public Profesor(String nombre, String apellido, String titulo, int dni) {
         this.apellido = apellido;
         this.nombre = nombre;
         this.titulo = titulo;
         this.dni = dni;
+        this.materiasDictadas = new ArrayList<>();
     }
     public int getProfesorId() {
         return profesorId;
@@ -51,7 +56,15 @@ public class Profesor {
     public List<Materia> getMateriasDictadas() {
         return materiasDictadas;
     }
-    public void setMateriasDictadas(List<Materia> materiasDictadas) {
+    public void setListaMateriasDictadas(List<Materia> materiasDictadas) {
         this.materiasDictadas = materiasDictadas;
+    }
+    public void setMateria(Materia materia) {
+        if(!materiasDictadas.contains(materia)){
+            materiasDictadas.add(materia);
+            if (materia.getProfesor() != this) {
+                materia.setProfesor(this);
+            }
+        }
     }
 }
