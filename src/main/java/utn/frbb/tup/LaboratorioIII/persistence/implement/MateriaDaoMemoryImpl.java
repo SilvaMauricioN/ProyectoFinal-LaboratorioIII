@@ -35,8 +35,8 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
 //            throw new RuntimeException(e);
 //        }
 
-        Materia m = new Materia("laboratorio I", 1, 1);
-        Materia m1 = new Materia("laboratorio II", 1, 1);
+        Materia m = new Materia("aboratorio I", 1, 1);
+        Materia m1 = new Materia("Zaboratorio II", 1, 1);
 //
 //        m.setProfesor(p1);
 //        m1.setProfesor(p2);

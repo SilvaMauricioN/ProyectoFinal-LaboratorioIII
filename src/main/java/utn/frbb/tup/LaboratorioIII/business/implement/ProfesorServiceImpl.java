@@ -9,9 +9,8 @@ import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.ProfesorDao;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 @Service
 public class ProfesorServiceImpl implements ProfesorService {
@@ -46,7 +45,17 @@ public class ProfesorServiceImpl implements ProfesorService {
         return profesor;
     }
 
-    private void castingDtoProfesor(Profesor profesor, ProfesorDto profesorDto){
+    @Override
+    public List<Materia> getMateriasDictadas(Integer idProfesor) throws ProfesorException {
+        Profesor profesor = profesorDao.findProfesor(idProfesor);
+
+        List<Materia> MateriasDictadas = profesor.getMateriasDictadas();
+        Collections.sort(MateriasDictadas);
+
+        return MateriasDictadas;
+    }
+
+    private void castingDtoProfesor(Profesor profesor, ProfesorDto profesorDto) throws ProfesorException {
         profesor.setNombre(profesorDto.getNombre());
         profesor.setApellido(profesorDto.getApellido());
         profesor.setTitulo(profesorDto.getTitulo());
@@ -59,7 +68,12 @@ public class ProfesorServiceImpl implements ProfesorService {
         //Agrego las materias a dictar por el profesor, y a las materias se le asigna el profesor
         if(listaMateriasDictadas != null){
             for(Materia m: listaMateriasDictadas){
-                profesor.setMateria(m);
+                //profesor nuevo, lista materias vacias
+                if(m.getProfesor() == null){
+                    profesor.setMateria(m);
+                }else{
+                    throw new ProfesorException("LA MATERIA " + m.getNombre() + " YA TIENE PROFESOR ASIGNADO");
+                }
             }
         }
     }

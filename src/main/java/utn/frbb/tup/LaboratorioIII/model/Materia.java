@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "materiaId")
-public class Materia {
+public class Materia implements Comparable<Materia> {
     private int materiaId;
     private String nombre;
     private int anio;
@@ -37,7 +37,7 @@ public class Materia {
     }
 
     public String getNombre() {
-        return nombre;
+        return nombre.toUpperCase();
     }
 
     public void setNombre(String nombre) {
@@ -86,6 +86,15 @@ public class Materia {
     @Override
     public int hashCode() {
         return Objects.hash(materiaId, nombre, anio, cuatrimestre);
+    }
+    @Override
+    public int compareTo(Materia materia){
+        int valor = this.nombre.compareTo(materia.getNombre());
+
+        if(valor==0){
+            valor = Integer.compare(this.materiaId, materia.getMateriaId());
+        }
+        return valor;
     }
     @Override
     public String toString() {
