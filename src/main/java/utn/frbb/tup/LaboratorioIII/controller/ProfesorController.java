@@ -7,7 +7,6 @@ import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
-
 import java.util.List;
 
 @RestController
@@ -19,7 +18,7 @@ public class ProfesorController {
     }
     @PostMapping
     //crear profesor
-    public Profesor crearProfesor(@RequestBody ProfesorDto profesorDto) throws ProfesorException, IllegalAccessException, NoSuchFieldException, MateriaNotFoundException {
+    public Profesor crearProfesor(@RequestBody ProfesorDto profesorDto) throws ProfesorException, IllegalAccessException, MateriaNotFoundException {
         Validator.ValidarCampos(profesorDto);
         return profesorService.crearProfesor(profesorDto);
     }
@@ -35,6 +34,11 @@ public class ProfesorController {
     @GetMapping
     public List<Profesor> getProfesores(){
         return profesorService.getAllProfesor();
+    }
+
+    @DeleteMapping("/{idProfesor}")
+    public void deleteProfesor(@PathVariable("idProfesor") Integer idProfesor) throws ProfesorException {
+        profesorService.deleteProfesor(idProfesor);
     }
 
 }

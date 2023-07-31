@@ -3,13 +3,10 @@ package utn.frbb.tup.LaboratorioIII.persistence.implement;
 
 import org.springframework.stereotype.Component;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
-import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
-import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import utn.frbb.tup.LaboratorioIII.persistence.GeneradorId;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.MateriaDao;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.ProfesorDao;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +32,8 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
 //            throw new RuntimeException(e);
 //        }
 
-        Materia m = new Materia("aboratorio I", 1, 1);
-        Materia m1 = new Materia("Zaboratorio II", 1, 1);
+        Materia m = new Materia("Laboratorio I", 1, 1);
+        Materia m1 = new Materia("Laboratorio II", 1, 1);
 //
 //        m.setProfesor(p1);
 //        m1.setProfesor(p2);

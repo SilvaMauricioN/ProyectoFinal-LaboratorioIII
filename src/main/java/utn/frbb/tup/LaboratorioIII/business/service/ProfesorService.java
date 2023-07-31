@@ -20,4 +20,6 @@ public interface ProfesorService {
     Profesor actualizarProfesor(Integer id, ProfesorDto profesorDto) throws ProfesorException, MateriaNotFoundException;
 
     List<Materia> getMateriasDictadas(Integer idProfesor) throws ProfesorException;
+
+    void deleteProfesor(Integer idProfesor) throws ProfesorException;
 }

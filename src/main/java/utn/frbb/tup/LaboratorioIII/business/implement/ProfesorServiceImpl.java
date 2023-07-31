@@ -54,7 +54,12 @@ public class ProfesorServiceImpl implements ProfesorService {
 
         return MateriasDictadas;
     }
+    @Override
+    public void deleteProfesor(Integer idProfesor) throws ProfesorException {
+        profesorDao.deleteProfesor(idProfesor);
 
+
+    }
     private void castingDtoProfesor(Profesor profesor, ProfesorDto profesorDto) throws ProfesorException {
         profesor.setNombre(profesorDto.getNombre());
         profesor.setApellido(profesorDto.getApellido());

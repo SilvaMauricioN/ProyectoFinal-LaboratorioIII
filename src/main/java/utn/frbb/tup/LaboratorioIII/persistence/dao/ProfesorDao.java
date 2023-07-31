@@ -12,4 +12,6 @@ public interface ProfesorDao {
     List<Profesor> getAllProfesores();
 
     void upDateProfesor(Profesor profesor);
+
+    void deleteProfesor(Integer idProfesor) throws ProfesorException;
 }
