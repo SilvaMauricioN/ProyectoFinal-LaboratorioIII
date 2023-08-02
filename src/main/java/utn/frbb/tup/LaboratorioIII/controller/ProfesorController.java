@@ -2,8 +2,8 @@ package utn.frbb.tup.LaboratorioIII.controller;
 
 import org.springframework.web.bind.annotation.*;
 import utn.frbb.tup.LaboratorioIII.business.service.ProfesorService;
-import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
+import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
@@ -28,7 +28,7 @@ public class ProfesorController {
         return profesorService.actualizarProfesor(id,profesorDto);
     }
     @GetMapping("/materias")
-    public List<Materia> getMateriasProfesor(@RequestParam Integer idProfesor) throws ProfesorException {
+    public List<MateriaDtoSalida> getMateriasProfesor(@RequestParam Integer idProfesor) throws ProfesorException {
         return profesorService.getMateriasDictadas(idProfesor);
     }
     @GetMapping

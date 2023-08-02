@@ -5,6 +5,7 @@ package utn.frbb.tup.LaboratorioIII.business.service;
 
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
+import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
@@ -19,7 +20,7 @@ public interface ProfesorService {
 
     Profesor actualizarProfesor(Integer id, ProfesorDto profesorDto) throws ProfesorException, MateriaNotFoundException;
 
-    List<Materia> getMateriasDictadas(Integer idProfesor) throws ProfesorException;
+    List<MateriaDtoSalida> getMateriasDictadas(Integer idProfesor) throws ProfesorException;
 
     void deleteProfesor(Integer idProfesor) throws ProfesorException;
 }

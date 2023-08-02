@@ -6,6 +6,7 @@ import utn.frbb.tup.LaboratorioIII.business.service.MateriaService;
 import utn.frbb.tup.LaboratorioIII.business.service.ProfesorService;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
+import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.ProfesorDao;
@@ -44,21 +45,49 @@ public class ProfesorServiceImpl implements ProfesorService {
         profesorDao.upDateProfesor(profesor);
         return profesor;
     }
-
     @Override
-    public List<Materia> getMateriasDictadas(Integer idProfesor) throws ProfesorException {
+    public List<MateriaDtoSalida> getMateriasDictadas(Integer idProfesor) throws ProfesorException {
         Profesor profesor = profesorDao.findProfesor(idProfesor);
 
         List<Materia> MateriasDictadas = profesor.getMateriasDictadas();
-        Collections.sort(MateriasDictadas);
+        List<MateriaDtoSalida> materiasDictadasDTO = new ArrayList<>();
+        if(MateriasDictadas != null){
+            for(Materia m: MateriasDictadas){
+                materiasDictadasDTO.add(castingMateriaDtoSalida(m));
+            }
+            Collections.sort(materiasDictadasDTO);
+        }
+        return materiasDictadasDTO;
+    }
+    private MateriaDtoSalida castingMateriaDtoSalida(Materia m){
+        MateriaDtoSalida materiaSalida = new MateriaDtoSalida();
+        List<MateriaDtoSalida> materiasCorrelativasDto = new ArrayList<>();
 
-        return MateriasDictadas;
+        materiaSalida.setNombre(m.getNombre());
+        materiaSalida.setYear(m.getAnio());
+        materiaSalida.setCuatrimestre(m.getCuatrimestre());
+
+        if(m.getListaCorrelatividades() == null){
+            materiaSalida.setCorrelativas(materiasCorrelativasDto);
+        }else{
+            List<Materia> materiasCorrelativas = m.getListaCorrelatividades();
+            for(Materia materia: materiasCorrelativas){
+                MateriaDtoSalida materiaDtoSalida = castingMateriaDtoSalida(materia);
+                materiasCorrelativasDto.add(materiaDtoSalida);
+            }
+        }
+        materiaSalida.setCorrelativas(materiasCorrelativasDto);
+        return materiaSalida;
     }
     @Override
     public void deleteProfesor(Integer idProfesor) throws ProfesorException {
+        Profesor profesor = profesorDao.findProfesor(idProfesor);
+        List<Materia> materiasDictas = profesor.getMateriasDictadas();
+
+        for(Materia m : materiasDictas){
+            m.setProfesor(null);
+        }
         profesorDao.deleteProfesor(idProfesor);
-
-
     }
     private void castingDtoProfesor(Profesor profesor, ProfesorDto profesorDto) throws ProfesorException {
         profesor.setNombre(profesorDto.getNombre());

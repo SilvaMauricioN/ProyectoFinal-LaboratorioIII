@@ -48,12 +48,15 @@ public class MateriaServiceImpl implements MateriaService {
         Materia materia = materiaDao.findMateria(id);
         Profesor profesor = profesorDao.findProfesor(materiaDto.getProfesorId());
 
-        if(!materia.getProfesor().equals(profesor)){
-            Profesor p = materia.getProfesor();
-            List <Materia> listaMateria =  p.getMateriasDictadas();
-            listaMateria.remove(materia);
-
-            profesorDao.upDateProfesor(p);
+        if(!profesor.equals(materia.getProfesor())){
+            if(materia.getProfesor() != null){
+                Profesor p = materia.getProfesor();
+                List <Materia> listaMateria =  p.getMateriasDictadas();
+                if(listaMateria != null){
+                    listaMateria.remove(materia);
+                    profesorDao.upDateProfesor(p);
+                }
+            }
         }
 
         List<Map<String, String>> errores = castingDtoMateria(materia, materiaDto);
