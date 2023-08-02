@@ -4,6 +4,7 @@ import utn.frbb.tup.LaboratorioIII.model.Materia;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MateriaDtoSalida implements Comparable<MateriaDtoSalida>{
     String nombre;
@@ -51,6 +52,27 @@ public class MateriaDtoSalida implements Comparable<MateriaDtoSalida>{
 
     public void setCorrelativas(List<MateriaDtoSalida> correlativas) {
         Correlativas = correlativas;
+    }
+
+    @Override
+    public String toString() {
+        return "MateriaDtoSalida{" +
+                "nombre='" + nombre + '\'' +
+                ", year=" + year +
+                ", cuatrimestre=" + cuatrimestre +
+                ", Correlativas=" + Correlativas +
+                '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MateriaDtoSalida materia = (MateriaDtoSalida) o;
+        return year == materia.year && cuatrimestre == materia.cuatrimestre && Objects.equals(nombre, materia.nombre) && Objects.equals(Correlativas, materia.Correlativas);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(nombre, year, cuatrimestre);
     }
 
     @Override
