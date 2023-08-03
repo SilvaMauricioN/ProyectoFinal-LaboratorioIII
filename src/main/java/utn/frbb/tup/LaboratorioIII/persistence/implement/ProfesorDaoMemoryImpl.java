@@ -51,7 +51,6 @@ public class ProfesorDaoMemoryImpl implements ProfesorDao {
     public synchronized void upDateProfesor(Profesor profesor) {
         repositorioProfesor.put(profesor.getProfesorId(),profesor);
     }
-
     @Override
     public void deleteProfesor(Integer idProfesor) throws ProfesorException {
         if(repositorioProfesor.containsKey(idProfesor)){

@@ -6,7 +6,8 @@ import utn.frbb.tup.LaboratorioIII.business.service.MateriaService;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
-import utn.frbb.tup.LaboratorioIII.model.dto.MateriaResponse;
+import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
+import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.MateriaDao;
@@ -23,15 +24,21 @@ public class MateriaServiceImpl implements MateriaService {
         this.profesorDao = profesorDao;
     }
     @Override
-    public MateriaResponse crearMateria(MateriaDto materiaDto) throws MateriaNotFoundException, ProfesorException {
+    public MateriaDtoSalida crearMateria(MateriaDto materiaDto) throws MateriaNotFoundException, ProfesorException {
         Materia materia = new Materia();
-        List<Map<String, String>> errores = castingDtoMateria(materia, materiaDto);
-
+        List<Map<String, String>> errores = castingMateriaDto(materia, materiaDto);
         Profesor profesor = profesorDao.findProfesor(materiaDto.getProfesorId());
         materia.setProfesor(profesor);
-
         materiaDao.saveMateria(materia);
-        return new MateriaResponse(materia,errores);
+
+        MateriaDtoSalida materiaDtoSalida = castingMateriaDtoSalida(materia);
+        ProfesorDtoSalida profesorDtoSalida = new ProfesorDtoSalida(profesor.getNombre(),
+                profesor.getApellido(), profesor.getTitulo(), profesor.getDni());
+
+        materiaDtoSalida.setProfesorDtoSalida(profesorDtoSalida);
+        materiaDtoSalida.setStatus(errores);
+
+        return materiaDtoSalida;
     }
     @Override
     public List<Materia> getAllMaterias() {
@@ -58,13 +65,12 @@ public class MateriaServiceImpl implements MateriaService {
                 }
             }
         }
-
-        List<Map<String, String>> errores = castingDtoMateria(materia, materiaDto);
+        List<Map<String, String>> errores = castingMateriaDto(materia, materiaDto);
         materia.setProfesor(profesor);
         materiaDao.upDateMateria(materia);
         return materia;
     }
-    private List<Map<String, String>> castingDtoMateria(Materia materia, MateriaDto materiaDto){
+    private List<Map<String, String>> castingMateriaDto(Materia materia, MateriaDto materiaDto){
 
         materia.setNombre(materiaDto.getNombre());
         materia.setAnio(materiaDto.getYear());
@@ -76,6 +82,27 @@ public class MateriaServiceImpl implements MateriaService {
         materia.setListaCorrelatividades(listaCorrelativas);
 
         return posiblesErrores;
+    }
+    @Override
+    public MateriaDtoSalida castingMateriaDtoSalida(Materia m){
+        MateriaDtoSalida materiaSalida = new MateriaDtoSalida();
+        List<MateriaDtoSalida> materiasCorrelativasDto = new ArrayList<>();
+
+        materiaSalida.setNombre(m.getNombre());
+        materiaSalida.setYear(m.getAnio());
+        materiaSalida.setCuatrimestre(m.getCuatrimestre());
+
+        if(m.getListaCorrelatividades() == null){
+            materiaSalida.setCorrelativas(materiasCorrelativasDto);
+        }else{
+            List<Materia> materiasCorrelativas = m.getListaCorrelatividades();
+            for(Materia materia: materiasCorrelativas){
+                MateriaDtoSalida materiaDtoSalida = castingMateriaDtoSalida(materia);
+                materiasCorrelativasDto.add(materiaDtoSalida);
+            }
+        }
+        materiaSalida.setCorrelativas(materiasCorrelativasDto);
+        return materiaSalida;
     }
     public List<Materia> getListaMateriaPorId(List<Integer> listaId,List<Map<String,String>> Errores){
         List<Materia> listaMaterias = new ArrayList<>();

@@ -4,6 +4,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.NonNullFields;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProfesorDto {
@@ -48,6 +49,7 @@ public class ProfesorDto {
     public List<Integer> getMateriasDictadasID() {
         return materiasDictadasID;
     }
+
 
     public void setMateriasDictadasID(List<Integer> materiasDictadasID) {
         this.materiasDictadasID = materiasDictadasID;

@@ -2,9 +2,9 @@ package utn.frbb.tup.LaboratorioIII.controller;
 
 import org.springframework.web.bind.annotation.*;
 import utn.frbb.tup.LaboratorioIII.business.service.ProfesorService;
-import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
+import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import java.util.List;
@@ -18,12 +18,12 @@ public class ProfesorController {
     }
     @PostMapping
     //crear profesor
-    public Profesor crearProfesor(@RequestBody ProfesorDto profesorDto) throws ProfesorException, IllegalAccessException, MateriaNotFoundException {
+    public ProfesorDtoSalida crearProfesor(@RequestBody ProfesorDto profesorDto) throws ProfesorException, IllegalAccessException, MateriaNotFoundException {
         Validator.ValidarCampos(profesorDto);
         return profesorService.crearProfesor(profesorDto);
     }
     @PutMapping("/{idProfesor}")
-    public Profesor actualizarProfesor(@PathVariable("idProfesor") Integer id, @RequestBody ProfesorDto profesorDto) throws IllegalAccessException, ProfesorException, MateriaNotFoundException {
+    public ProfesorDtoSalida actualizarProfesor(@PathVariable("idProfesor") Integer id, @RequestBody ProfesorDto profesorDto) throws IllegalAccessException, ProfesorException, MateriaNotFoundException {
         Validator.ValidarCampos(profesorDto);
         return profesorService.actualizarProfesor(id,profesorDto);
     }
@@ -32,10 +32,9 @@ public class ProfesorController {
         return profesorService.getMateriasDictadas(idProfesor);
     }
     @GetMapping
-    public List<Profesor> getProfesores(){
+    public List<ProfesorDtoSalida> getProfesores() throws ProfesorException {
         return profesorService.getAllProfesor();
     }
-
     @DeleteMapping("/{idProfesor}")
     public void deleteProfesor(@PathVariable("idProfesor") Integer idProfesor) throws ProfesorException {
         profesorService.deleteProfesor(idProfesor);

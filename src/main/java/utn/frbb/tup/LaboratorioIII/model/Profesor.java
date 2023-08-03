@@ -2,6 +2,7 @@ package utn.frbb.tup.LaboratorioIII.model;
 
 import com.fasterxml.jackson.annotation.*;
 
+
 import java.util.ArrayList;
 import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "profesorId")
