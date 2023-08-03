@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import utn.frbb.tup.LaboratorioIII.model.exception.AlumnoNotFoundException;
+import utn.frbb.tup.LaboratorioIII.model.exception.CorrelatividadException;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 
 //anotacion particular, indica que la clase majena las exepciones y mapeas el codigo de error adecuado
 @ControllerAdvice
 public class UtnResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class,ProfesorException.class,Exception.class})
+    @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class,ProfesorException.class, CorrelatividadException.class,Exception.class})
     //recibe una exepcion del tipo runtimeException(illegalArgumet/illegalState)
     protected ResponseEntity<Object> handleConflict(Exception exception, WebRequest request) {
         HttpStatus status;
@@ -25,7 +26,7 @@ public class UtnResponseEntityExceptionHandler extends ResponseEntityExceptionHa
 
         if(exception instanceof MateriaNotFoundException || exception instanceof AlumnoNotFoundException){
             status = HttpStatus.NOT_FOUND;
-        }else if((exception instanceof IllegalArgumentException || exception instanceof ProfesorException)){
+        }else if((exception instanceof IllegalArgumentException || exception instanceof ProfesorException || exception instanceof CorrelatividadException)){
             status = HttpStatus.BAD_REQUEST;
         }else{
             status = HttpStatus.INTERNAL_SERVER_ERROR;

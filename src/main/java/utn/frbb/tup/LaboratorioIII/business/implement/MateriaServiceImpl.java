@@ -8,6 +8,7 @@ import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDtoSalida;
+import utn.frbb.tup.LaboratorioIII.model.exception.CorrelatividadException;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.MateriaDao;
@@ -24,7 +25,7 @@ public class MateriaServiceImpl implements MateriaService {
         this.profesorDao = profesorDao;
     }
     @Override
-    public MateriaDtoSalida crearMateria(MateriaDto materiaDto) throws MateriaNotFoundException, ProfesorException {
+    public MateriaDtoSalida crearMateria(MateriaDto materiaDto) throws MateriaNotFoundException, ProfesorException, CorrelatividadException {
         Materia materia = new Materia();
         List<Map<String, String>> errores = castingMateriaDto(materia, materiaDto);
         Profesor profesor = profesorDao.findProfesor(materiaDto.getProfesorId());
@@ -51,7 +52,7 @@ public class MateriaServiceImpl implements MateriaService {
     }
 
     @Override
-    public Materia actualizarMateria(Integer id,MateriaDto materiaDto) throws MateriaNotFoundException, ProfesorException {
+    public MateriaDtoSalida actualizarMateria(Integer id,MateriaDto materiaDto) throws MateriaNotFoundException, ProfesorException, CorrelatividadException {
         Materia materia = materiaDao.findMateria(id);
         Profesor profesor = profesorDao.findProfesor(materiaDto.getProfesorId());
 
@@ -68,20 +69,32 @@ public class MateriaServiceImpl implements MateriaService {
         List<Map<String, String>> errores = castingMateriaDto(materia, materiaDto);
         materia.setProfesor(profesor);
         materiaDao.upDateMateria(materia);
-        return materia;
+
+        MateriaDtoSalida materiaDtoSalida = castingMateriaDtoSalida(materia);
+        ProfesorDtoSalida profesorDtoSalida = new ProfesorDtoSalida(profesor.getNombre(),
+                profesor.getApellido(), profesor.getTitulo(), profesor.getDni());
+
+        materiaDtoSalida.setProfesorDtoSalida(profesorDtoSalida);
+        materiaDtoSalida.setStatus(errores);
+        return materiaDtoSalida;
     }
-    private List<Map<String, String>> castingMateriaDto(Materia materia, MateriaDto materiaDto){
+    private List<Map<String, String>> castingMateriaDto(Materia materia, MateriaDto materiaDto) throws CorrelatividadException {
 
         materia.setNombre(materiaDto.getNombre());
         materia.setAnio(materiaDto.getYear());
         materia.setCuatrimestre(materiaDto.getCuatrimestre());
 
         List<Integer> correlatividadesDtoId = materiaDto.getListaCorrelatividades();
-        List <Map<String,String>> posiblesErrores = new ArrayList<>();
-        List<Materia> listaCorrelativas = getListaMateriaPorId(correlatividadesDtoId,posiblesErrores);
-        materia.setListaCorrelatividades(listaCorrelativas);
 
-        return posiblesErrores;
+        if(correlatividadesDtoId.contains(materia.getMateriaId())){
+            throw new CorrelatividadException("LA MATERIA " + materia.getNombre() + " NO PUEDE SER SU PROPIA CORRELATIVA ");
+        }else{
+            List <Map<String,String>> posiblesErrores = new ArrayList<>();
+            List<Materia> listaCorrelativas = getListaMateriaPorId(correlatividadesDtoId,posiblesErrores);
+            materia.setListaCorrelatividades(listaCorrelativas);
+
+            return posiblesErrores;
+        }
     }
     @Override
     public MateriaDtoSalida castingMateriaDtoSalida(Materia m){
@@ -110,6 +123,7 @@ public class MateriaServiceImpl implements MateriaService {
             for(Integer i:listaId){
                 try {
                     Materia materiaDictada = materiaDao.findMateria(i);
+
                     listaMaterias.add(materiaDictada);
                 } catch (MateriaNotFoundException e) {
                     Map<String,String> error = new HashMap<>(){{

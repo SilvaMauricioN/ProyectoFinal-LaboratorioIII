@@ -6,7 +6,7 @@ import utn.frbb.tup.LaboratorioIII.business.service.MateriaService;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
-import utn.frbb.tup.LaboratorioIII.model.dto.MateriaResponse;
+import utn.frbb.tup.LaboratorioIII.model.exception.CorrelatividadException;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import java.util.List;
@@ -25,12 +25,12 @@ public class MateriaController {
     }
     @PostMapping("/" )
     //crear materia
-    public MateriaDtoSalida crearMateria(@RequestBody MateriaDto materiaDto) throws MateriaNotFoundException, IllegalAccessException, ProfesorException {
+    public MateriaDtoSalida crearMateria(@RequestBody MateriaDto materiaDto) throws MateriaNotFoundException, IllegalAccessException, ProfesorException, CorrelatividadException {
         Validator.ValidarCampos(materiaDto);
         return materiaService.crearMateria(materiaDto);
     }
     @PutMapping("/{materiaId}")
-    public Materia actualizarMateria(@PathVariable("materiaId") Integer id, @RequestBody MateriaDto materiaDto) throws IllegalAccessException, ProfesorException, MateriaNotFoundException {
+    public MateriaDtoSalida actualizarMateria(@PathVariable("materiaId") Integer id, @RequestBody MateriaDto materiaDto) throws IllegalAccessException, ProfesorException, MateriaNotFoundException, CorrelatividadException {
         Validator.ValidarCampos(materiaDto);
         return materiaService.actualizarMateria(id,materiaDto);
     }
