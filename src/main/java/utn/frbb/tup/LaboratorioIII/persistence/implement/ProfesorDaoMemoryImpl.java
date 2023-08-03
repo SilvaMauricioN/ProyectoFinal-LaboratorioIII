@@ -29,7 +29,7 @@ public class ProfesorDaoMemoryImpl implements ProfesorDao {
     public synchronized void saveProfesor(Profesor profesor) throws ProfesorException {
         if(!repositorioProfesor.containsValue(profesor)){
             profesor.setProfesorId(generadorId.getIdNuevo());
-            repositorioProfesor.put(profesor.getDni(),profesor);
+            repositorioProfesor.put(profesor.getProfesorId(),profesor);
         }else{
             throw new ProfesorException("PROFESOR YA GUARDADO");
         }
@@ -37,7 +37,7 @@ public class ProfesorDaoMemoryImpl implements ProfesorDao {
     @Override
     public synchronized Profesor findProfesor(Integer profesorId) throws ProfesorException {
         for(Profesor profesor: repositorioProfesor.values()){
-            if(profesorId.equals(profesor.getProfesorId())){
+            if(profesor.getProfesorId() == profesorId){
                 return profesor;
             }
         }

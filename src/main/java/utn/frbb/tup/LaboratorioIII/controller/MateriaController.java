@@ -3,7 +3,6 @@ package utn.frbb.tup.LaboratorioIII.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import utn.frbb.tup.LaboratorioIII.business.service.MateriaService;
-import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.exception.CorrelatividadException;
@@ -20,7 +19,7 @@ public class MateriaController {
         this.materiaService = materiaService;
     }
     @GetMapping
-    public List<Materia> getMaterias() {
+    public List<MateriaDtoSalida> getMaterias() {
         return (materiaService.getAllMaterias());
     }
     @PostMapping("/" )
@@ -36,7 +35,7 @@ public class MateriaController {
     }
     //Buscar materia por identificador
     @GetMapping("/{materiaId}")
-    public Materia buscarMateria(@PathVariable("materiaId") int materiaId) throws MateriaNotFoundException {
+    public MateriaDtoSalida buscarMateria(@PathVariable("materiaId") int materiaId) throws MateriaNotFoundException {
         return materiaService.findMateria(materiaId);
     }
 }

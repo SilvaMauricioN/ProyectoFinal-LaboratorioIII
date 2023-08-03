@@ -16,9 +16,9 @@ import java.util.Map;
 public interface MateriaService {
     MateriaDtoSalida crearMateria(MateriaDto inputData) throws MateriaNotFoundException, ProfesorException, CorrelatividadException;
 
-    List<Materia> getAllMaterias();
+    List<MateriaDtoSalida> getAllMaterias();
 
-    Materia findMateria(int materiaId) throws MateriaNotFoundException;
+    MateriaDtoSalida findMateria(int materiaId) throws MateriaNotFoundException;
     List<Materia> getListaMateriaPorId(List<Integer> listaId,List<Map<String,String>> Errores);
     MateriaDtoSalida castingMateriaDtoSalida(Materia m);
     MateriaDtoSalida actualizarMateria(Integer id,MateriaDto materiaDto) throws MateriaNotFoundException, ProfesorException, CorrelatividadException;

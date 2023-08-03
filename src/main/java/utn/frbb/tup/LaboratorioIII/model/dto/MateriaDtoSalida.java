@@ -2,24 +2,28 @@ package utn.frbb.tup.LaboratorioIII.model.dto;
 
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
+@JsonPropertyOrder({"nombre", "año", "cuatrimestre", "profesor", "correlativas", "status"})
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class MateriaDtoSalida implements Comparable<MateriaDtoSalida>{
     String nombre;
-    Integer year;
+    Integer año;
     Integer cuatrimestre;
-    ProfesorDtoSalida profesorDtoSalida;
-    List<MateriaDtoSalida> Correlativas = new ArrayList<>();
+    ProfesorDtoSalida profesor;
+    List<MateriaDtoSalida> correlativas = new ArrayList<>();
     List<Map<String,String>> status = new ArrayList<>();
 
     public MateriaDtoSalida() {
     }
     public MateriaDtoSalida(String nombre, Integer year, Integer cuatrimestre) {
         this.nombre = nombre;
-        this.year = year;
+        this.año = year;
         this.cuatrimestre = cuatrimestre;
     }
     public String getNombre() {
@@ -30,12 +34,12 @@ public class MateriaDtoSalida implements Comparable<MateriaDtoSalida>{
         this.nombre = nombre;
     }
 
-    public Integer getYear() {
-        return year;
+    public Integer getAño() {
+        return año;
     }
 
-    public void setYear(Integer year) {
-        this.year = year;
+    public void setAño(Integer año) {
+        this.año = año;
     }
 
     public Integer getCuatrimestre() {
@@ -46,18 +50,18 @@ public class MateriaDtoSalida implements Comparable<MateriaDtoSalida>{
         this.cuatrimestre = cuatrimestre;
     }
 
-    public ProfesorDtoSalida getProfesorDtoSalida() {
-        return profesorDtoSalida;
+    public ProfesorDtoSalida getProfesor() {
+        return profesor;
     }
-    public void setProfesorDtoSalida(ProfesorDtoSalida profesorDtoSalida) {
-        this.profesorDtoSalida = profesorDtoSalida;
+    public void setProfesor(ProfesorDtoSalida profesor) {
+        this.profesor = profesor;
     }
     public List<MateriaDtoSalida> getCorrelativas() {
-        return Correlativas;
+        return correlativas;
     }
 
     public void setCorrelativas(List<MateriaDtoSalida> correlativas) {
-        Correlativas = correlativas;
+        this.correlativas = correlativas;
     }
     public List<Map<String, String>> getStatus() {
         return status;
@@ -70,18 +74,18 @@ public class MateriaDtoSalida implements Comparable<MateriaDtoSalida>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MateriaDtoSalida materia = (MateriaDtoSalida) o;
-        return this.year == materia.year && this.cuatrimestre == materia.cuatrimestre && Objects.equals(nombre, materia.nombre) && Objects.equals(Correlativas, materia.Correlativas);
+        return this.año == materia.año && this.cuatrimestre == materia.cuatrimestre && Objects.equals(nombre, materia.nombre) && Objects.equals(correlativas, materia.correlativas);
     }
     @Override
     public int hashCode() {
-        return Objects.hash(nombre, year, cuatrimestre);
+        return Objects.hash(nombre, año, cuatrimestre);
     }
     @Override
     public int compareTo(MateriaDtoSalida materiaSalida) {
         int valor = this.nombre.compareTo(materiaSalida.nombre);
 
         if(valor==0){
-            valor = Integer.compare(this.year, materiaSalida.year);
+            valor = Integer.compare(this.año, materiaSalida.año);
         }
         return valor;
     }
@@ -89,9 +93,9 @@ public class MateriaDtoSalida implements Comparable<MateriaDtoSalida>{
     public String toString() {
         return "MateriaDtoSalida{" +
                 "nombre='" + nombre + '\'' +
-                ", year=" + year +
+                ", year=" + año +
                 ", cuatrimestre=" + cuatrimestre +
-                ", Correlativas=" + Correlativas +
+                ", Correlativas=" + correlativas +
                 '}';
     }
 }

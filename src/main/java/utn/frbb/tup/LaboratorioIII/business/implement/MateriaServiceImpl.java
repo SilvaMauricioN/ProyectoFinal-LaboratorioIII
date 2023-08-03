@@ -36,19 +36,31 @@ public class MateriaServiceImpl implements MateriaService {
         ProfesorDtoSalida profesorDtoSalida = new ProfesorDtoSalida(profesor.getNombre(),
                 profesor.getApellido(), profesor.getTitulo(), profesor.getDni());
 
-        materiaDtoSalida.setProfesorDtoSalida(profesorDtoSalida);
+        materiaDtoSalida.setProfesor(profesorDtoSalida);
         materiaDtoSalida.setStatus(errores);
 
         return materiaDtoSalida;
     }
     @Override
-    public List<Materia> getAllMaterias() {
-        return (materiaDao.getAllMaterias());
+    public List<MateriaDtoSalida> getAllMaterias() {
+        List<Materia> guardadas = materiaDao.getAllMaterias();
+        List<MateriaDtoSalida> materiasDtoSalida = new ArrayList<>();
+
+        if(!guardadas.isEmpty()){
+            for(Materia m : guardadas){
+                MateriaDtoSalida materiaDtoSalida = castingMateriaDtoSalida(m);
+                materiasDtoSalida.add(materiaDtoSalida);
+            }
+        }
+        return materiasDtoSalida;
     }
 
     @Override
-    public Materia findMateria(int materiaId) throws MateriaNotFoundException {
-        return materiaDao.findMateria(materiaId);
+    public MateriaDtoSalida findMateria(int materiaId) throws MateriaNotFoundException {
+        MateriaDtoSalida materiaDtoSalida = new MateriaDtoSalida();
+        materiaDtoSalida = castingMateriaDtoSalida(materiaDao.findMateria(materiaId));
+
+        return materiaDtoSalida;
     }
 
     @Override
@@ -74,8 +86,9 @@ public class MateriaServiceImpl implements MateriaService {
         ProfesorDtoSalida profesorDtoSalida = new ProfesorDtoSalida(profesor.getNombre(),
                 profesor.getApellido(), profesor.getTitulo(), profesor.getDni());
 
-        materiaDtoSalida.setProfesorDtoSalida(profesorDtoSalida);
         materiaDtoSalida.setStatus(errores);
+        materiaDtoSalida.setProfesor(profesorDtoSalida);
+
         return materiaDtoSalida;
     }
     private List<Map<String, String>> castingMateriaDto(Materia materia, MateriaDto materiaDto) throws CorrelatividadException {
@@ -102,7 +115,7 @@ public class MateriaServiceImpl implements MateriaService {
         List<MateriaDtoSalida> materiasCorrelativasDto = new ArrayList<>();
 
         materiaSalida.setNombre(m.getNombre());
-        materiaSalida.setYear(m.getAnio());
+        materiaSalida.setAño(m.getAnio());
         materiaSalida.setCuatrimestre(m.getCuatrimestre());
 
         if(m.getListaCorrelatividades() == null){

@@ -79,9 +79,10 @@ public class ProfesorServiceImpl implements ProfesorService {
     public void deleteProfesor(Integer idProfesor) throws ProfesorException {
         Profesor profesor = profesorDao.findProfesor(idProfesor);
         List<Materia> materiasDictas = profesor.getMateriasDictadas();
-
-        for(Materia m : materiasDictas){
-            m.setProfesor(null);
+        if(materiasDictas != null){
+            for(Materia m : materiasDictas){
+                m.setProfesor(null);
+            }
         }
         profesorDao.deleteProfesor(idProfesor);
     }
@@ -93,7 +94,7 @@ public class ProfesorServiceImpl implements ProfesorService {
         if(profesor.getMateriasDictadas() != null){
             materiaDtoSalidas = getMateriasDictadas(profesor.getProfesorId());
         }
-        profesorDtoSalida.setMateriasDictadas(materiaDtoSalidas);
+        profesorDtoSalida.setMaterias(materiaDtoSalidas);
         return profesorDtoSalida;
     }
 //    private MateriaDtoSalida castingMateriaDtoSalida(Materia m){

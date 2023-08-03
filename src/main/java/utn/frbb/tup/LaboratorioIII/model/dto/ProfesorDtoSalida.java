@@ -1,17 +1,19 @@
 package utn.frbb.tup.LaboratorioIII.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+@JsonPropertyOrder({"nombre", "apellido", "titulo", "dni", "materias", "status"})
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ProfesorDtoSalida{
     String nombre;
     String apellido;
     String titulo;
     Integer dni;
-    List<MateriaDtoSalida> materiasDictadas = new ArrayList<>();
+    List<MateriaDtoSalida> materias = new ArrayList<>();
     List<Map<String,String>> status = new ArrayList<>();
     public ProfesorDtoSalida(String nombre, String apellido, String titulo, Integer dni) {
         this.nombre = nombre;
@@ -44,11 +46,11 @@ public class ProfesorDtoSalida{
     public void setDni(Integer dni) {
         this.dni = dni;
     }
-    public List<MateriaDtoSalida> getMateriasDictadas() {
-        return materiasDictadas;
+    public List<MateriaDtoSalida> getMaterias() {
+        return materias;
     }
-    public void setMateriasDictadas(List<MateriaDtoSalida> materiasDictadas) {
-        this.materiasDictadas = materiasDictadas;
+    public void setMaterias(List<MateriaDtoSalida> materias) {
+        this.materias = materias;
     }
     public List<Map<String, String>> getStatus() {
         return status;
