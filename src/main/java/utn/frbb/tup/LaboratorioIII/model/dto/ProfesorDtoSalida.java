@@ -21,7 +21,6 @@ public class ProfesorDtoSalida{
         this.titulo = titulo;
         this.dni = dni;
     }
-    public ProfesorDtoSalida() {}
     public String getNombre() {
         return nombre;
     }

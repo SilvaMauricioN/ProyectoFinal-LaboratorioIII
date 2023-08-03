@@ -1,16 +1,10 @@
 package utn.frbb.tup.LaboratorioIII.business.service;
 
-
-
-
-
-import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
-
 import java.util.List;
 
 public interface ProfesorService {

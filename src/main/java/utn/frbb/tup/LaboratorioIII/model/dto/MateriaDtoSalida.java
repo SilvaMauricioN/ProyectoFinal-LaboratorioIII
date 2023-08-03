@@ -1,19 +1,16 @@
 package utn.frbb.tup.LaboratorioIII.model.dto;
 
-
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-@JsonPropertyOrder({"nombre", "año", "cuatrimestre", "profesor", "correlativas", "status"})
+@JsonPropertyOrder({"nombre", "anio", "cuatrimestre", "profesor", "correlativas", "status"})
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class MateriaDtoSalida implements Comparable<MateriaDtoSalida>{
     String nombre;
-    Integer año;
+    Integer anio;
     Integer cuatrimestre;
     ProfesorDtoSalida profesor;
     List<MateriaDtoSalida> correlativas = new ArrayList<>();
@@ -23,7 +20,7 @@ public class MateriaDtoSalida implements Comparable<MateriaDtoSalida>{
     }
     public MateriaDtoSalida(String nombre, Integer year, Integer cuatrimestre) {
         this.nombre = nombre;
-        this.año = year;
+        this.anio = year;
         this.cuatrimestre = cuatrimestre;
     }
     public String getNombre() {
@@ -34,12 +31,12 @@ public class MateriaDtoSalida implements Comparable<MateriaDtoSalida>{
         this.nombre = nombre;
     }
 
-    public Integer getAño() {
-        return año;
+    public Integer getAnio() {
+        return anio;
     }
 
-    public void setAño(Integer año) {
-        this.año = año;
+    public void setAnio(Integer anio) {
+        this.anio = anio;
     }
 
     public Integer getCuatrimestre() {
@@ -74,18 +71,18 @@ public class MateriaDtoSalida implements Comparable<MateriaDtoSalida>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MateriaDtoSalida materia = (MateriaDtoSalida) o;
-        return this.año == materia.año && this.cuatrimestre == materia.cuatrimestre && Objects.equals(nombre, materia.nombre) && Objects.equals(correlativas, materia.correlativas);
+        return this.anio == materia.anio && this.cuatrimestre == materia.cuatrimestre && Objects.equals(nombre, materia.nombre) && Objects.equals(correlativas, materia.correlativas);
     }
     @Override
     public int hashCode() {
-        return Objects.hash(nombre, año, cuatrimestre);
+        return Objects.hash(nombre, anio, cuatrimestre);
     }
     @Override
     public int compareTo(MateriaDtoSalida materiaSalida) {
         int valor = this.nombre.compareTo(materiaSalida.nombre);
 
         if(valor==0){
-            valor = Integer.compare(this.año, materiaSalida.año);
+            valor = Integer.compare(this.anio, materiaSalida.anio);
         }
         return valor;
     }
@@ -93,7 +90,7 @@ public class MateriaDtoSalida implements Comparable<MateriaDtoSalida>{
     public String toString() {
         return "MateriaDtoSalida{" +
                 "nombre='" + nombre + '\'' +
-                ", year=" + año +
+                ", year=" + anio +
                 ", cuatrimestre=" + cuatrimestre +
                 ", Correlativas=" + correlativas +
                 '}';

@@ -6,7 +6,6 @@ import utn.frbb.tup.LaboratorioIII.business.service.AlumnoService;
 import utn.frbb.tup.LaboratorioIII.model.Alumno;
 import utn.frbb.tup.LaboratorioIII.model.dto.AlumnoDto;
 import utn.frbb.tup.LaboratorioIII.model.exception.AlumnoNotFoundException;
-
 import java.util.List;
 
 @RestController

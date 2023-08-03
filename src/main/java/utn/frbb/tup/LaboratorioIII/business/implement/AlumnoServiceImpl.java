@@ -3,7 +3,6 @@ package utn.frbb.tup.LaboratorioIII.business.implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import utn.frbb.tup.LaboratorioIII.business.service.AlumnoService;
 import utn.frbb.tup.LaboratorioIII.business.service.AsignaturaService;
 import utn.frbb.tup.LaboratorioIII.model.Alumno;
@@ -15,7 +14,6 @@ import utn.frbb.tup.LaboratorioIII.model.exception.AlumnoNotFoundException;
 import utn.frbb.tup.LaboratorioIII.model.exception.CorrelatividadesNoAprobadasException;
 import utn.frbb.tup.LaboratorioIII.model.exception.EstadoIncorrectoException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.AlumnoDao;
-
 import java.util.List;
 import java.util.Random;
 

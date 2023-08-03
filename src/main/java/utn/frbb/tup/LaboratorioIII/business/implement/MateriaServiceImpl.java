@@ -57,7 +57,7 @@ public class MateriaServiceImpl implements MateriaService {
 
     @Override
     public MateriaDtoSalida findMateria(int materiaId) throws MateriaNotFoundException {
-        MateriaDtoSalida materiaDtoSalida = new MateriaDtoSalida();
+        MateriaDtoSalida materiaDtoSalida;
         materiaDtoSalida = castingMateriaDtoSalida(materiaDao.findMateria(materiaId));
 
         return materiaDtoSalida;
@@ -115,7 +115,7 @@ public class MateriaServiceImpl implements MateriaService {
         List<MateriaDtoSalida> materiasCorrelativasDto = new ArrayList<>();
 
         materiaSalida.setNombre(m.getNombre());
-        materiaSalida.setAño(m.getAnio());
+        materiaSalida.setAnio(m.getAnio());
         materiaSalida.setCuatrimestre(m.getCuatrimestre());
 
         if(m.getListaCorrelatividades() == null){
