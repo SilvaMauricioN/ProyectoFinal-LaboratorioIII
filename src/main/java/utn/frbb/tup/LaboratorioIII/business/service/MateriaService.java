@@ -16,4 +16,6 @@ public interface MateriaService {
 //    List<Materia> getListaMateriaPorId(List<Integer> listaId, List<Map<String,String>> Errores);
 
     MateriaDtoSalida actualizarMateria(Integer id, MateriaDto dtoMateria) throws MateriaNotFoundException, ProfesorException, CorrelatividadException;
+
+    void deleteProfesor(Integer idMateria) throws MateriaNotFoundException;
 }

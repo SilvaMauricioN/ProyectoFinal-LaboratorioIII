@@ -50,6 +50,10 @@ public class MateriaServiceImpl implements MateriaService {
         if(!guardadas.isEmpty()){
             for(Materia m : guardadas){
                 MateriaDtoSalida materiaDtoSalida = castingDtos.aMateriaDtoSalida(m);
+                if(m.getProfesor() != null){
+                    ProfesorDtoSalida profesorDtoSalida = castingDtos.toProfesorDtoSalida(m.getProfesor());
+                    materiaDtoSalida.setProfesor(profesorDtoSalida);
+                }
                 materiasDtoSalida.add(materiaDtoSalida);
             }
         }
@@ -60,7 +64,12 @@ public class MateriaServiceImpl implements MateriaService {
     public MateriaDtoSalida findMateria(int materiaId) throws MateriaNotFoundException {
 
         Materia materia = materiaDao.findMateria(materiaId);
-        return  castingDtos.aMateriaDtoSalida(materia);
+        MateriaDtoSalida materiaDtoSalida = castingDtos.aMateriaDtoSalida(materia);
+        if(materia.getProfesor() != null){
+            ProfesorDtoSalida profesorDtoSalida = castingDtos.toProfesorDtoSalida(materia.getProfesor());
+            materiaDtoSalida.setProfesor(profesorDtoSalida);
+        }
+        return materiaDtoSalida;
     }
 
     @Override
@@ -90,6 +99,23 @@ public class MateriaServiceImpl implements MateriaService {
         materiaDtoSalida.setProfesor(profesorDtoSalida);
 
         return materiaDtoSalida;
+    }
+
+    @Override
+    public void deleteProfesor(Integer idMateria) throws MateriaNotFoundException {
+        Materia materia = materiaDao.findMateria(idMateria);
+        Profesor profesor = materia.getProfesor();
+
+        if(profesor != null){
+            List<Materia> dictadas  = profesor.getMateriasDictadas();
+
+            for(Materia m :dictadas){
+                if(m.equals(materia)){
+                    dictadas.remove(m);
+                }
+            }
+        }
+        materiaDao.deleteMateria(idMateria);
     }
 
 }

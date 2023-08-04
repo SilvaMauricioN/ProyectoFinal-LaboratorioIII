@@ -8,10 +8,11 @@ import java.util.List;
 public interface AlumnoDao {
     void saveAlumno(Alumno alumno) throws AlumnoNotFoundException;
 
-    Alumno findAlumno(Long dni);
+    Alumno findAlumno(Integer id) throws AlumnoNotFoundException;
 
     List<Alumno> findAlumno(String apellido) throws AlumnoNotFoundException;
-    Alumno upDateAlumno(Long dni);
-    Alumno loadAlumno(Long dni);
+    void upDateAlumno(Alumno alumno);
 
+
+    void deleteAlumno(Integer idAlumno);
 }

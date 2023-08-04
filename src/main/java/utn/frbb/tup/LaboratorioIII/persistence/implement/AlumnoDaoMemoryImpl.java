@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 @Component
 public class AlumnoDaoMemoryImpl implements AlumnoDao {
-    private final Map<Long, Alumno> repositorioAlumnos = new HashMap<>();
+    private final Map<Integer, Alumno> repositorioAlumnos = new HashMap<>();
     private final GeneradorId generadorId = GeneradorId.getInstance();
     public AlumnoDaoMemoryImpl() throws AlumnoNotFoundException {
         inicializarAlumnos();
@@ -27,18 +27,20 @@ public class AlumnoDaoMemoryImpl implements AlumnoDao {
     public void saveAlumno(Alumno alumno) throws AlumnoNotFoundException {
         if(!repositorioAlumnos.containsValue(alumno)){
             alumno.setId(generadorId.getIdNuevo());
-            repositorioAlumnos.put(alumno.getDni(), alumno);
+            repositorioAlumnos.put(alumno.getId(), alumno);
         }else{
             throw new AlumnoNotFoundException("EL ALUMNO YA EXISTE");
         }
     }
 
-
-
-
     @Override
-    public Alumno findAlumno(Long dni) {
-        return null;
+    public Alumno findAlumno(Integer id) throws AlumnoNotFoundException {
+        for(Alumno alumno : repositorioAlumnos.values()){
+            if(alumno.getId() == id){
+                return alumno;
+            }
+        }
+        throw new AlumnoNotFoundException("ALUMNO NO ENCONTRADO");
     }
     @Override
     public List<Alumno> findAlumno(String apellido) throws AlumnoNotFoundException {
@@ -56,11 +58,14 @@ public class AlumnoDaoMemoryImpl implements AlumnoDao {
         throw new AlumnoNotFoundException("Alumno No Encontrado");
     }
     @Override
-    public Alumno upDateAlumno(Long dni) {
-        return null;
+    public void upDateAlumno(Alumno alumno) {
+        repositorioAlumnos.put(alumno.getId(),alumno);
     }
-    public Alumno loadAlumno(Long dni) {
-        return null;
+
+    @Override
+    public void deleteAlumno(Integer idAlumno) {
+        repositorioAlumnos.remove(idAlumno);
+
     }
 
 }

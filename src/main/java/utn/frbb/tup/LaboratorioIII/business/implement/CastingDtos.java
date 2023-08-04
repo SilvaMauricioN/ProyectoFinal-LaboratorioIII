@@ -2,12 +2,12 @@ package utn.frbb.tup.LaboratorioIII.business.implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import utn.frbb.tup.LaboratorioIII.model.Alumno;
+import utn.frbb.tup.LaboratorioIII.model.Asignatura;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
-import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
-import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
-import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
-import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDtoSalida;
+import utn.frbb.tup.LaboratorioIII.model.dto.*;
+import utn.frbb.tup.LaboratorioIII.model.exception.AsignaturaInexistenteException;
 import utn.frbb.tup.LaboratorioIII.model.exception.CorrelatividadException;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
@@ -66,7 +66,6 @@ public class CastingDtos {
         profesorDtoSalida.setMaterias(materiaDtoSalidas);
         return profesorDtoSalida;
     }
-
     public ProfesorDtoSalida toProfesorDtoSalida(Profesor profesor){
         ProfesorDtoSalida profesorDtoSalida = new ProfesorDtoSalida();
         profesorDtoSalida.setNombre(profesor.getNombre());
@@ -75,9 +74,43 @@ public class CastingDtos {
         profesorDtoSalida.setDni(profesor.getDni());
         return profesorDtoSalida;
     }
+    public AlumnoDtoSalida aAlumnoDtoSalida(Alumno alumno){
+        AlumnoDtoSalida alumnoDtoSalida = new AlumnoDtoSalida(alumno.getNombre(),
+                alumno.getApellido(),alumno.getDni());
+
+        List<Asignatura> asignaturas = alumno.getListaAsignaturas();
+        List<AsignaturaDtoSalida> asignaturaRegistrado = new ArrayList<>();
+
+        for(Asignatura a : asignaturas){
+            AsignaturaDtoSalida asignaturaDtoSalida = aAsignaturaDtoSalida(a);
+            asignaturaRegistrado.add(asignaturaDtoSalida);
+        }
+
+        alumnoDtoSalida.setAsignaturas(asignaturaRegistrado);
+        return alumnoDtoSalida;
+    }
+    public AsignaturaDtoSalida aAsignaturaDtoSalida(Asignatura asignatura){
+        AsignaturaDtoSalida asignaturaDtoSalida = new AsignaturaDtoSalida();
+        asignaturaDtoSalida.setNombre(asignatura.getMateria().getNombre());
+        asignaturaDtoSalida.setAnio(asignatura.getMateria().getAnio());
+        asignaturaDtoSalida.setCuatrimestre(asignatura.getMateria().getCuatrimestre());
+        asignaturaDtoSalida.setEstado(asignatura.getEstado());
+        asignaturaDtoSalida.setNota(asignatura.getNota());
+
+        if(asignatura.getMateria().getProfesor() != null){
+            asignaturaDtoSalida.setProfesor(asignatura.getMateria().getProfesor().getApellido());
+        }
+        List<Materia> correlativas = asignatura.getMateria().getListaCorrelatividades();
+        if(correlativas != null){
+            for(Materia m : correlativas){
+                asignaturaDtoSalida.setCorrelativas(m.getNombre());
+            }
+        }
+        return asignaturaDtoSalida;
+    }
+
     //Metodos Entidades de Entrada
     public List<Map<String, String>> aMateriaDto(Materia materia, MateriaDto dtoMateria) throws CorrelatividadException {
-
         materia.setNombre(dtoMateria.getNombre());
         materia.setAnio(dtoMateria.getYear());
         materia.setCuatrimestre(dtoMateria.getCuatrimestre());
@@ -94,7 +127,6 @@ public class CastingDtos {
             return posiblesErrores;
         }
     }
-
     public List<Map<String,String>> aProfesorDto(Profesor profesor, ProfesorDto dtoProfesor) throws ProfesorException {
         profesor.setNombre(dtoProfesor.getNombre());
         profesor.setApellido(dtoProfesor.getApellido());
@@ -118,7 +150,29 @@ public class CastingDtos {
         }
         return posiblesErrores;
     }
+    public  List<Map<String, String>> aAlumnoDto(Alumno alumno, AlumnoDto dtoAlumno) throws AsignaturaInexistenteException{
+        alumno.setNombre(dtoAlumno.getNombre());
+        alumno.setApellido(dtoAlumno.getApellido());
+        alumno.setDni(dtoAlumno.getDni());
 
+        List<Asignatura> registrado = new ArrayList<>();
+        List<Integer> idAsignaturas = dtoAlumno.getAsignaturasId();
+        List<Map<String,String>> posiblesErrores = new ArrayList<>();
+
+        if(dtoAlumno.getAsignaturasId() != null){
+            List<Materia> materiasInscripto = getListaMateriaPorId(idAsignaturas,posiblesErrores);
+
+            for(Materia materia : materiasInscripto){
+                Asignatura asignatura = new Asignatura(materia);
+                registrado.add(asignatura);
+            }
+            alumno.setListaAsignaturas(registrado);
+            return posiblesErrores;
+        }else{
+            throw new AsignaturaInexistenteException("EL ALUMNO DEBE ESTAR INSCRIPTO EN ALGUNA MATERIA");
+        }
+
+    }
     //Obtener lista de materias de la capa de persistencia de materia
     public List<Materia> getListaMateriaPorId(List<Integer> listaId, List<Map<String,String>> Errores){
         List<Materia> listaMaterias = new ArrayList<>();
@@ -139,7 +193,4 @@ public class CastingDtos {
         }
         return listaMaterias;
     }
-
-
-
 }

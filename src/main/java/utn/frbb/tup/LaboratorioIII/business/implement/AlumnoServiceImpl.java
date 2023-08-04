@@ -44,17 +44,17 @@ public class AlumnoServiceImpl implements AlumnoService {
         }
         a.aprobarAsignatura(nota);
         asignaturaService.actualizarAsignatura(a);
-        Alumno alumno = alumnoDao.loadAlumno(dni);
-        alumno.actualizarAsignatura(a);
-        alumnoDao.saveAlumno(alumno);
+//        Alumno alumno = alumnoDao.findAlumno(alumno.getId());
+//        alumno.actualizarAsignatura(a);
+//        alumnoDao.saveAlumno(alumno);
     }
     @Override
     public AlumnoDtoSalida crearAlumno(AlumnoDto dtoAlumno) throws AsignaturaInexistenteException, AlumnoNotFoundException {
         Alumno alumno = new Alumno();
-        List<Map<String, String>> errores = castingAlumnoDto(alumno, dtoAlumno);
+        List<Map<String, String>> errores = castingDtos.aAlumnoDto(alumno, dtoAlumno);
         alumnoDao.saveAlumno(alumno);
 
-        AlumnoDtoSalida alumnoDtoSalida = castingAlumnoDtoSalida(alumno);
+        AlumnoDtoSalida alumnoDtoSalida = castingDtos.aAlumnoDtoSalida(alumno);
         alumnoDtoSalida.setStatus(errores);
 
         return alumnoDtoSalida;
@@ -63,59 +63,25 @@ public class AlumnoServiceImpl implements AlumnoService {
     public List<Alumno> buscarAlumno(String apellido) throws AlumnoNotFoundException {
         return alumnoDao.findAlumno(apellido);
     }
-    private List<Map<String, String>> castingAlumnoDto(Alumno alumno, AlumnoDto dtoAlumno) throws AsignaturaInexistenteException {
-        alumno.setNombre(dtoAlumno.getNombre());
-        alumno.setApellido(dtoAlumno.getApellido());
-        alumno.setDni(dtoAlumno.getDni());
 
-        List<Asignatura> registrado = new ArrayList<>();
-        List<Integer> idAsignaturas = dtoAlumno.getAsignaturasId();
-        List<Map<String,String>> posiblesErrores = new ArrayList<>();
+    @Override
+    public AlumnoDtoSalida actualizarMateria(Integer id, AlumnoDto alumnoDto) throws AsignaturaInexistenteException, AlumnoNotFoundException {
+        Alumno alumno = alumnoDao.findAlumno(id);
 
-        if(dtoAlumno.getAsignaturasId() != null){
-            List<Materia> materiasInscripto = castingDtos.getListaMateriaPorId(idAsignaturas,posiblesErrores);
+        List<Map<String,String>> posiblesErrores = castingDtos.aAlumnoDto(alumno,alumnoDto);
 
-            for(Materia m : materiasInscripto){
-                Asignatura asignatura = new Asignatura(m);
-                registrado.add(asignatura);
-            }
-            alumno.setListaAsignaturas(registrado);
-            return posiblesErrores;
-        }else{
-            throw new AsignaturaInexistenteException("EL ALUMNO DEBE ESTAR INSCRIPTO EN ALGUNA MATERIA");
-        }
-    }
-    private AlumnoDtoSalida castingAlumnoDtoSalida(Alumno alumno){
-        AlumnoDtoSalida alumnoDtoSalida = new AlumnoDtoSalida(alumno.getNombre(),
-                alumno.getApellido(),alumno.getDni());
-        List<Asignatura> asignaturas = alumno.getListaAsignaturas();
+        alumnoDao.upDateAlumno(alumno);
 
-        List<AsignaturaDtoSalida> asignaturaRegistrado = new ArrayList<>();
+        AlumnoDtoSalida alumnoDtoSalida = castingDtos.aAlumnoDtoSalida(alumno);
+        alumnoDtoSalida.setStatus(posiblesErrores);
 
-        for(Asignatura a : asignaturas){
-            AsignaturaDtoSalida asignaturaDtoSalida = new AsignaturaDtoSalida();
-
-            asignaturaDtoSalida.setNombre(a.getMateria().getNombre());
-            asignaturaDtoSalida.setAnio(a.getMateria().getAnio());
-            asignaturaDtoSalida.setCuatrimestre(a.getMateria().getCuatrimestre());
-            if(a.getMateria().getProfesor() != null){
-                asignaturaDtoSalida.setProfesor(a.getMateria().getProfesor().getApellido());
-            }
-            asignaturaDtoSalida.setEstado(a.getEstado());
-
-            List<Materia> correlativas = a.getMateria().getListaCorrelatividades();
-            if(correlativas != null){
-                for(Materia m : correlativas){
-                    asignaturaDtoSalida.setCorrelativas(m.getNombre());
-                }
-            }
-
-            asignaturaDtoSalida.setNota(a.getNota());
-            asignaturaRegistrado.add(asignaturaDtoSalida);
-        }
-
-        alumnoDtoSalida.setAsignaturas(asignaturaRegistrado);
         return alumnoDtoSalida;
+    }
+
+    @Override
+    public void deleteAlumno(Integer idAlumno) throws AlumnoNotFoundException {
+        alumnoDao.findAlumno(idAlumno);
+        alumnoDao.deleteAlumno(idAlumno);
     }
 
 

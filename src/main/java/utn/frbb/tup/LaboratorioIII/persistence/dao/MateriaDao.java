@@ -11,4 +11,6 @@ public interface MateriaDao {
     List<Materia> getAllMaterias();
 
     void upDateMateria(Materia materia);
+
+    void deleteMateria(Integer idMateria);
 }

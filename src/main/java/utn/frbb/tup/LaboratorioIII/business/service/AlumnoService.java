@@ -14,4 +14,8 @@ public interface AlumnoService {
     void aprobarAsignatura(int materiaId, int nota, long dni) throws EstadoIncorrectoException, CorrelatividadesNoAprobadasException, AlumnoNotFoundException;
     AlumnoDtoSalida crearAlumno(AlumnoDto dtoAlumno) throws AsignaturaInexistenteException, AlumnoNotFoundException;
     List<Alumno> buscarAlumno(String apellido) throws AlumnoNotFoundException;
+
+    AlumnoDtoSalida actualizarMateria(Integer id, AlumnoDto alumnoDto) throws AsignaturaInexistenteException, AlumnoNotFoundException;
+
+    void deleteAlumno(Integer idAlumno) throws AlumnoNotFoundException;
 }

@@ -74,4 +74,9 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
     public synchronized void upDateMateria(Materia materia) {
         repositorioMateria.put(materia.getMateriaId(),materia);
     }
+
+    @Override
+    public void deleteMateria(Integer idMateria) {
+        repositorioMateria.remove(idMateria);
+    }
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Alumno {
-    private long id;
+    private Integer id;
     private String nombre;
     private String apellido;
     private long dni;
@@ -18,11 +18,11 @@ public class Alumno {
         listaAsignaturas = new ArrayList<>();
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

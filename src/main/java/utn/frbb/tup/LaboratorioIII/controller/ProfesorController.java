@@ -41,7 +41,7 @@ public class ProfesorController {
     public ResponseEntity<String> deleteProfesor(@PathVariable("idProfesor") Integer idProfesor) throws ProfesorException {
         profesorService.deleteProfesor(idProfesor);
         return ResponseEntity.status(HttpStatus.OK)
-                .body("PROFESOR ELIMINADO");
+                .body("PROFESOR ELIMINADO DE BASE DE DATOS");
     }
 
 }
