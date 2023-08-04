@@ -2,7 +2,7 @@ package utn.frbb.tup.LaboratorioIII.model.dto;
 
 import java.util.List;
 
-public class DtoProfesor {
+public class ProfesorDto {
     private String nombre;
     private String apellido;
     private String titulo;

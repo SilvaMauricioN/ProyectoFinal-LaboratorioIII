@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import utn.frbb.tup.LaboratorioIII.business.service.AlumnoService;
 import utn.frbb.tup.LaboratorioIII.business.service.AsignaturaService;
-import utn.frbb.tup.LaboratorioIII.business.service.MateriaService;
 import utn.frbb.tup.LaboratorioIII.model.Alumno;
 import utn.frbb.tup.LaboratorioIII.model.Asignatura;
 import utn.frbb.tup.LaboratorioIII.model.EstadoAsignatura;
@@ -24,13 +23,14 @@ import java.util.Map;
 public class AlumnoServiceImpl implements AlumnoService {
     private final AlumnoDao alumnoDao;
     private final AsignaturaService asignaturaService;
-    private final MateriaService materiaService;
-    private final CastingDtos castingDtos = new CastingDtos();
+//    private final MateriaService materiaService;
+    private final CastingDtos castingDtos;
     @Autowired
-    public AlumnoServiceImpl(AlumnoDao alumnoDao, AsignaturaService asignaturaService, MateriaService materiaService){
+    public AlumnoServiceImpl(AlumnoDao alumnoDao, AsignaturaService asignaturaService, CastingDtos castingDtos){
         this.alumnoDao = alumnoDao;
         this.asignaturaService = asignaturaService;
-        this.materiaService = materiaService;
+//        this.materiaService = materiaService;
+        this.castingDtos = castingDtos;
     }
     @Override
     public void aprobarAsignatura(int materiaId, int nota, long dni) throws CorrelatividadesNoAprobadasException, AlumnoNotFoundException {
@@ -49,7 +49,7 @@ public class AlumnoServiceImpl implements AlumnoService {
         alumnoDao.saveAlumno(alumno);
     }
     @Override
-    public AlumnoDtoSalida crearAlumno(DtoAlumno dtoAlumno) throws AsignaturaInexistenteException, AlumnoNotFoundException {
+    public AlumnoDtoSalida crearAlumno(AlumnoDto dtoAlumno) throws AsignaturaInexistenteException, AlumnoNotFoundException {
         Alumno alumno = new Alumno();
         List<Map<String, String>> errores = castingAlumnoDto(alumno, dtoAlumno);
         alumnoDao.saveAlumno(alumno);
@@ -63,7 +63,7 @@ public class AlumnoServiceImpl implements AlumnoService {
     public List<Alumno> buscarAlumno(String apellido) throws AlumnoNotFoundException {
         return alumnoDao.findAlumno(apellido);
     }
-    private List<Map<String, String>> castingAlumnoDto(Alumno alumno, DtoAlumno dtoAlumno) throws AsignaturaInexistenteException {
+    private List<Map<String, String>> castingAlumnoDto(Alumno alumno, AlumnoDto dtoAlumno) throws AsignaturaInexistenteException {
         alumno.setNombre(dtoAlumno.getNombre());
         alumno.setApellido(dtoAlumno.getApellido());
         alumno.setDni(dtoAlumno.getDni());
@@ -73,7 +73,7 @@ public class AlumnoServiceImpl implements AlumnoService {
         List<Map<String,String>> posiblesErrores = new ArrayList<>();
 
         if(dtoAlumno.getAsignaturasId() != null){
-            List<Materia> materiasInscripto = materiaService.getListaMateriaPorId(idAsignaturas,posiblesErrores);
+            List<Materia> materiasInscripto = castingDtos.getListaMateriaPorId(idAsignaturas,posiblesErrores);
 
             for(Materia m : materiasInscripto){
                 Asignatura asignatura = new Asignatura(m);

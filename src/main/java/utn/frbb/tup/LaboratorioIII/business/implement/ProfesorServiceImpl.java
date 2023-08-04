@@ -2,48 +2,46 @@ package utn.frbb.tup.LaboratorioIII.business.implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import utn.frbb.tup.LaboratorioIII.business.service.MateriaService;
 import utn.frbb.tup.LaboratorioIII.business.service.ProfesorService;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
-import utn.frbb.tup.LaboratorioIII.model.dto.DtoProfesor;
+import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
+import utn.frbb.tup.LaboratorioIII.persistence.dao.MateriaDao;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.ProfesorDao;
 import java.util.*;
 
 @Service
 public class ProfesorServiceImpl implements ProfesorService {
     private final ProfesorDao profesorDao;
-    private final MateriaService materiaService;
     private final CastingDtos castingDtos;
     @Autowired
-    public ProfesorServiceImpl(ProfesorDao profesorDao,MateriaService materiaService){
+    public ProfesorServiceImpl(ProfesorDao profesorDao,MateriaDao materiaDao){
         this.profesorDao = profesorDao;
-        this.materiaService = materiaService;
-        this.castingDtos = new CastingDtos();
+        this.castingDtos = new CastingDtos(materiaDao);
     }
     @Override
-    public ProfesorDtoSalida crearProfesor(DtoProfesor dtoProfesor) throws ProfesorException{
+    public ProfesorDtoSalida crearProfesor(ProfesorDto dtoProfesor) throws ProfesorException{
         Profesor profesor = new Profesor();
         List<Map<String,String>> posiblesErrores = new ArrayList<>();
-        posiblesErrores = castingProfesorDto(profesor, dtoProfesor);
+        posiblesErrores = castingDtos.aProfesorDto(profesor, dtoProfesor);
         profesorDao.saveProfesor(profesor);
 
-        ProfesorDtoSalida profesorDtoSalida = castingDtos.convertirAprofesorDtoSalida(profesor);
+        ProfesorDtoSalida profesorDtoSalida = castingDtos.aProfesorDtoSalida(profesor);
         profesorDtoSalida.setStatus(posiblesErrores);
         return profesorDtoSalida;
     }
     @Override
-    public ProfesorDtoSalida actualizarProfesor(Integer id, DtoProfesor dtoProfesor) throws ProfesorException{
+    public ProfesorDtoSalida actualizarProfesor(Integer id, ProfesorDto dtoProfesor) throws ProfesorException{
         Profesor profesor = profesorDao.findProfesor(id);
         eliminarMateriasDictadas(profesor);
         List<Map<String,String>> posiblesErrores = new ArrayList<>();
-        posiblesErrores = castingProfesorDto(profesor, dtoProfesor);
+        posiblesErrores = castingDtos.aProfesorDto(profesor, dtoProfesor);
 
         profesorDao.upDateProfesor(profesor);
-        ProfesorDtoSalida profesorDtoSalida = castingDtos.convertirAprofesorDtoSalida(profesor);
+        ProfesorDtoSalida profesorDtoSalida = castingDtos.aProfesorDtoSalida(profesor);
         profesorDtoSalida.setStatus(posiblesErrores);
         return profesorDtoSalida;
     }
@@ -53,7 +51,7 @@ public class ProfesorServiceImpl implements ProfesorService {
         List<ProfesorDtoSalida> profesoresSalida = new ArrayList<>();
         if(!guardados.isEmpty()){
             for(Profesor p: guardados){
-                ProfesorDtoSalida profesorDtoSalida = castingDtos.convertirAprofesorDtoSalida(p);
+                ProfesorDtoSalida profesorDtoSalida = castingDtos.aProfesorDtoSalida(p);
                 profesoresSalida.add(profesorDtoSalida);
             }
         }
@@ -62,7 +60,7 @@ public class ProfesorServiceImpl implements ProfesorService {
     @Override
     public ProfesorDtoSalida findProfesor(int profesorDni) throws ProfesorException {
         Profesor profesor = profesorDao.findProfesor(profesorDni);
-        return castingDtos.convertirAprofesorDtoSalida(profesor);
+        return castingDtos.aProfesorDtoSalida(profesor);
     }
     @Override
     public List<MateriaDtoSalida> getMateriasDictadas(Integer idProfesor) throws ProfesorException {
@@ -71,7 +69,7 @@ public class ProfesorServiceImpl implements ProfesorService {
         List<MateriaDtoSalida> materiasDictadasDTO = new ArrayList<>();
         if(MateriasDictadas != null){
             for(Materia m: MateriasDictadas){
-                materiasDictadasDTO.add(castingDtos.convertirAmateriaDtoSalida(m));
+                materiasDictadasDTO.add(castingDtos.aMateriaDtoSalida(m));
             }
             Collections.sort(materiasDictadasDTO);
         }
@@ -88,29 +86,7 @@ public class ProfesorServiceImpl implements ProfesorService {
         }
         profesorDao.deleteProfesor(idProfesor);
     }
-    private List<Map<String,String>> castingProfesorDto(Profesor profesor, DtoProfesor dtoProfesor) throws ProfesorException {
-        profesor.setNombre(dtoProfesor.getNombre());
-        profesor.setApellido(dtoProfesor.getApellido());
-        profesor.setTitulo(dtoProfesor.getTitulo());
-        profesor.setDni(dtoProfesor.getDni());
-
-        List<Integer> Idmaterias = dtoProfesor.getMateriasDictadasID();
-        List<Map<String, String>> status = new ArrayList<>();
-        List<Materia> listaMateriasDictadas = materiaService.getListaMateriaPorId(Idmaterias,status);
-
-        //Agrego las materias a dictar por el profesor,
-        if(listaMateriasDictadas != null){
-            for(Materia m: listaMateriasDictadas){
-                //profesor nuevo, lista materias vacias
-                if(m.getProfesor() == null){
-                    profesor.setMateria(m);
-                }else{
-                    throw new ProfesorException("LA MATERIA " + m.getNombre() + " YA TIENE PROFESOR ASIGNADO");
-                }
-            }
-        }
-        return status;
-    }
+    //Al eliminar un profesor, lo desasigno de la materia dictada
     private void eliminarMateriasDictadas(Profesor profesor){
         List<Materia> listaMateriasAntiguas = profesor.getMateriasDictadas();
         if(listaMateriasAntiguas != null){

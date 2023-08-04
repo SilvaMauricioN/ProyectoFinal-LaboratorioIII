@@ -3,7 +3,7 @@ package utn.frbb.tup.LaboratorioIII.model.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DtoAlumno {
+public class AlumnoDto {
     String nombre;
     String apellido;
     Long dni;

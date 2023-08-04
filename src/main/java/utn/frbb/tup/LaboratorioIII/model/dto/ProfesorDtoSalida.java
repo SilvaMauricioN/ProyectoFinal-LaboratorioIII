@@ -15,6 +15,7 @@ public class ProfesorDtoSalida{
     Integer dni;
     List<MateriaDtoSalida> materias = new ArrayList<>();
     List<Map<String,String>> status = new ArrayList<>();
+    public ProfesorDtoSalida(){}
     public ProfesorDtoSalida(String nombre, String apellido, String titulo, Integer dni) {
         this.nombre = nombre;
         this.apellido = apellido;

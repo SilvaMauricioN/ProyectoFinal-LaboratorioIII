@@ -3,7 +3,7 @@ package utn.frbb.tup.LaboratorioIII.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import utn.frbb.tup.LaboratorioIII.business.service.MateriaService;
-import utn.frbb.tup.LaboratorioIII.model.dto.DtoMateria;
+import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.exception.CorrelatividadException;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
@@ -24,12 +24,12 @@ public class MateriaController {
     }
     @PostMapping("/" )
     //crear materia
-    public MateriaDtoSalida crearMateria(@RequestBody DtoMateria dtoMateria) throws MateriaNotFoundException, IllegalAccessException, ProfesorException, CorrelatividadException {
+    public MateriaDtoSalida crearMateria(@RequestBody MateriaDto dtoMateria) throws MateriaNotFoundException, IllegalAccessException, ProfesorException, CorrelatividadException {
         Validator.ValidarCampos(dtoMateria);
         return materiaService.crearMateria(dtoMateria);
     }
     @PutMapping("/{materiaId}")
-    public MateriaDtoSalida actualizarMateria(@PathVariable("materiaId") Integer id, @RequestBody DtoMateria dtoMateria) throws IllegalAccessException, ProfesorException, MateriaNotFoundException, CorrelatividadException {
+    public MateriaDtoSalida actualizarMateria(@PathVariable("materiaId") Integer id, @RequestBody MateriaDto dtoMateria) throws IllegalAccessException, ProfesorException, MateriaNotFoundException, CorrelatividadException {
         Validator.ValidarCampos(dtoMateria);
         return materiaService.actualizarMateria(id, dtoMateria);
     }
