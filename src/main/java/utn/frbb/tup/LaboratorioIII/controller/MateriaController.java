@@ -40,8 +40,8 @@ public class MateriaController {
         return materiaService.actualizarMateria(id, dtoMateria);
     }
     @DeleteMapping("/{idMateria}")
-    public ResponseEntity<String> deleteMateria(@PathVariable("idMateria") Integer idMateria){
-        materiaService.deleteProfesor(idMateria);
+    public ResponseEntity<String> deleteMateria(@PathVariable("idMateria") Integer idMateria) throws MateriaNotFoundException {
+        materiaService.deleteMateria(idMateria);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("MATERIA ELIMINADO DE BASE DE DATOS");
     }

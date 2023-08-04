@@ -102,7 +102,7 @@ public class MateriaServiceImpl implements MateriaService {
     }
 
     @Override
-    public void deleteProfesor(Integer idMateria) throws MateriaNotFoundException {
+    public void deleteMateria(Integer idMateria) throws MateriaNotFoundException {
         Materia materia = materiaDao.findMateria(idMateria);
         Profesor profesor = materia.getProfesor();
 

@@ -17,5 +17,5 @@ public interface MateriaService {
 
     MateriaDtoSalida actualizarMateria(Integer id, MateriaDto dtoMateria) throws MateriaNotFoundException, ProfesorException, CorrelatividadException;
 
-    void deleteProfesor(Integer idMateria) throws MateriaNotFoundException;
+    void deleteMateria(Integer idMateria) throws MateriaNotFoundException;
 }
