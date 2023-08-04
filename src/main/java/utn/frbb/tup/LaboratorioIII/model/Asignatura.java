@@ -1,12 +1,13 @@
 package utn.frbb.tup.LaboratorioIII.model;
 
+import utn.frbb.tup.LaboratorioIII.model.exception.EstadoIncorrectoException;
+
 import java.util.Optional;
 
 public class Asignatura {
     private Materia materia;
     private EstadoAsignatura estado;
     private Integer nota;
-
     public Asignatura() {
     }
     public Asignatura(Materia materia) {
@@ -37,10 +38,18 @@ public class Asignatura {
     public void setEstado(EstadoAsignatura estado) {
         this.estado = estado;
     }
-
-    public void aprobarAsignatura(int nota) {
+    public void cursarAsignatura(){
+        this.estado = EstadoAsignatura.CURSADA;
     }
-//    public String getNombreAsignatura(){
-//        return this.materia.getNombre();
-//    }
+
+    public void aprobarAsignatura(int nota) throws EstadoIncorrectoException {
+        if (nota >= 4 && nota <= 10) {
+            this.estado = EstadoAsignatura.APROBADA;
+            this.nota = nota;
+        }else{
+            this.estado = EstadoAsignatura.RECURSA;
+            this.nota = nota;
+        }
+    }
+
 }

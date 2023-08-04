@@ -76,7 +76,7 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
     }
 
     @Override
-    public void deleteMateria(Integer idMateria) {
+    public synchronized void deleteMateria(Integer idMateria) {
         repositorioMateria.remove(idMateria);
     }
 }

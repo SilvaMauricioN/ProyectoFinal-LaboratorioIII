@@ -6,10 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frbb.tup.LaboratorioIII.business.service.AlumnoService;
 import utn.frbb.tup.LaboratorioIII.model.Alumno;
-import utn.frbb.tup.LaboratorioIII.model.dto.AlumnoDto;
-import utn.frbb.tup.LaboratorioIII.model.dto.AlumnoDtoSalida;
-import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
-import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
+import utn.frbb.tup.LaboratorioIII.model.Nota;
+import utn.frbb.tup.LaboratorioIII.model.dto.*;
 import utn.frbb.tup.LaboratorioIII.model.exception.*;
 
 import java.util.List;
@@ -33,15 +31,25 @@ public class AlumnoController {
         return alumnoService.buscarAlumno(apellido);
     }
     @PutMapping("/{idAlumno}")
-    public AlumnoDtoSalida actualizarMateria(@PathVariable("idAlumno") Integer id, @RequestBody AlumnoDto alumnoDto) throws IllegalAccessException, AsignaturaInexistenteException, AlumnoNotFoundException {
+    public AlumnoDtoSalida actualizarAlumno(@PathVariable("idAlumno") Integer id, @RequestBody AlumnoDto alumnoDto) throws IllegalAccessException, AsignaturaInexistenteException, AlumnoNotFoundException {
         Validator.ValidarCampos(alumnoDto);
-        return alumnoService.actualizarMateria(id, alumnoDto);
+        return alumnoService.actualizarAlumno(id, alumnoDto);
     }
     @DeleteMapping("/{idAlumno}")
-    public ResponseEntity<String> deleteAlumno(@PathVariable("idAlumno") Integer idAlumno) throws ProfesorException, AlumnoNotFoundException {
+    public ResponseEntity<String> deleteAlumno(@PathVariable("idAlumno") Integer idAlumno) throws AlumnoNotFoundException {
         alumnoService.deleteAlumno(idAlumno);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("ALUMNO ELIMINADO DE BASE DE DATOS");
+    }
+
+    @PutMapping("/{idAlumno}/asignatura/{idAsignatura}")
+    public AsignaturaDtoSalida actualizarEstadoAsignatura(@PathVariable("idAlumno") Integer idAlumno,
+                                                          @PathVariable("idAsignatura") Integer idAsignatura,
+                                                          @RequestBody Nota nota) throws AsignaturaInexistenteException, CorrelatividadesNoAprobadasException, EstadoIncorrectoException, AlumnoNotFoundException {
+        if(nota.nota() < 0 || nota.nota() > 10){
+            throw new IllegalArgumentException("LA NOTA DEBE ESTAR ENTRE 0 Y 10");
+        }
+        return alumnoService.modificaEstadoAsignatura(idAlumno, idAsignatura, nota);
     }
 
 
