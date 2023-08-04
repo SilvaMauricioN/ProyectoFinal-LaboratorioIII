@@ -36,7 +36,7 @@ public class AlumnoController {
         return alumnoService.actualizarAlumno(id, alumnoDto);
     }
     @DeleteMapping("/{idAlumno}")
-    public ResponseEntity<String> deleteAlumno(@PathVariable("idAlumno") Integer idAlumno) throws AlumnoNotFoundException {
+    public ResponseEntity<String> deleteAlumno(@PathVariable("idAlumno") Integer idAlumno) throws AlumnoNotFoundException, AsignaturaInexistenteException {
         alumnoService.deleteAlumno(idAlumno);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("ALUMNO ELIMINADO DE BASE DE DATOS");
