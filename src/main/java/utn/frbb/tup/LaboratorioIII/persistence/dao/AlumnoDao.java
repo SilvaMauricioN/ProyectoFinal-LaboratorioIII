@@ -6,7 +6,7 @@ import utn.frbb.tup.LaboratorioIII.model.exception.AlumnoNotFoundException;
 import java.util.List;
 
 public interface AlumnoDao {
-    void saveAlumno(Alumno alumno);
+    void saveAlumno(Alumno alumno) throws AlumnoNotFoundException;
 
     Alumno findAlumno(Long dni);
 

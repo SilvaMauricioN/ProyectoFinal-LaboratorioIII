@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frbb.tup.LaboratorioIII.business.service.ProfesorService;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
-import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
+import utn.frbb.tup.LaboratorioIII.model.dto.DtoProfesor;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
@@ -20,14 +20,14 @@ public class ProfesorController {
     }
     @PostMapping
     //crear profesor
-    public ProfesorDtoSalida crearProfesor(@RequestBody ProfesorDto profesorDto) throws ProfesorException, IllegalAccessException, MateriaNotFoundException {
-        Validator.ValidarCampos(profesorDto);
-        return profesorService.crearProfesor(profesorDto);
+    public ProfesorDtoSalida crearProfesor(@RequestBody DtoProfesor dtoProfesor) throws ProfesorException, IllegalAccessException, MateriaNotFoundException {
+        Validator.ValidarCampos(dtoProfesor);
+        return profesorService.crearProfesor(dtoProfesor);
     }
     @PutMapping("/{idProfesor}")
-    public ProfesorDtoSalida actualizarProfesor(@PathVariable("idProfesor") Integer id, @RequestBody ProfesorDto profesorDto) throws IllegalAccessException, ProfesorException, MateriaNotFoundException {
-        Validator.ValidarCampos(profesorDto);
-        return profesorService.actualizarProfesor(id,profesorDto);
+    public ProfesorDtoSalida actualizarProfesor(@PathVariable("idProfesor") Integer id, @RequestBody DtoProfesor dtoProfesor) throws IllegalAccessException, ProfesorException, MateriaNotFoundException {
+        Validator.ValidarCampos(dtoProfesor);
+        return profesorService.actualizarProfesor(id, dtoProfesor);
     }
     @GetMapping("/materias")
     public List<MateriaDtoSalida> getMateriasProfesor(@RequestParam Integer idProfesor) throws ProfesorException {

@@ -56,7 +56,7 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
     public synchronized Materia findMateria(Integer materiaId) throws MateriaNotFoundException {
 
         for(Materia materia:repositorioMateria.values()){
-            if (materiaId.equals(materia.getMateriaId())){
+            if(materia.getMateriaId() == materiaId){
                 return materia;
             }
         }

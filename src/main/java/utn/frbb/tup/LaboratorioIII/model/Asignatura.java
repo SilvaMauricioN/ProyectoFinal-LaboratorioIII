@@ -40,7 +40,7 @@ public class Asignatura {
 
     public void aprobarAsignatura(int nota) {
     }
-    public String getNombreAsignatura(){
-        return this.materia.getNombre();
-    }
+//    public String getNombreAsignatura(){
+//        return this.materia.getNombre();
+//    }
 }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MateriaDto {
+public class DtoMateria {
     private String nombre;
     private Integer year;
     private Integer cuatrimestre;

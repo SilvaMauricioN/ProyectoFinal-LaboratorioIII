@@ -3,6 +3,7 @@ package utn.frbb.tup.LaboratorioIII.persistence.implement;
 import org.springframework.stereotype.Component;
 import utn.frbb.tup.LaboratorioIII.model.Alumno;
 import utn.frbb.tup.LaboratorioIII.model.exception.AlumnoNotFoundException;
+import utn.frbb.tup.LaboratorioIII.persistence.GeneradorId;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.AlumnoDao;
 
 import java.util.ArrayList;
@@ -12,19 +13,29 @@ import java.util.Map;
 @Component
 public class AlumnoDaoMemoryImpl implements AlumnoDao {
     private final Map<Long, Alumno> repositorioAlumnos = new HashMap<>();
-    public AlumnoDaoMemoryImpl(){
+    private final GeneradorId generadorId = GeneradorId.getInstance();
+    public AlumnoDaoMemoryImpl() throws AlumnoNotFoundException {
         inicializarAlumnos();
     }
-    private void inicializarAlumnos() {
-        Alumno a1 = new Alumno("Mauricio","silva", 3569875);
-        Alumno a2 = new Alumno("Rolando", "fernandez", 8745693);
-        saveAlumno(a1);
-        saveAlumno(a2);
+    private void inicializarAlumnos() throws AlumnoNotFoundException {
+//        Alumno a1 = new Alumno("Mauricio","silva", 3569875);
+//        Alumno a2 = new Alumno("Rolando", "fernandez", 8745693);
+//        saveAlumno(a1);
+//        saveAlumno(a2);
     }
     @Override
-    public void saveAlumno(Alumno alumno) {
-        repositorioAlumnos.put(alumno.getDni(), alumno);
+    public void saveAlumno(Alumno alumno) throws AlumnoNotFoundException {
+        if(!repositorioAlumnos.containsValue(alumno)){
+            alumno.setId(generadorId.getIdNuevo());
+            repositorioAlumnos.put(alumno.getDni(), alumno);
+        }else{
+            throw new AlumnoNotFoundException("EL ALUMNO YA EXISTE");
+        }
     }
+
+
+
+
     @Override
     public Alumno findAlumno(Long dni) {
         return null;

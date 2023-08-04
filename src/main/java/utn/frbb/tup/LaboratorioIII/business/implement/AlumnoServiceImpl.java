@@ -5,35 +5,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import utn.frbb.tup.LaboratorioIII.business.service.AlumnoService;
 import utn.frbb.tup.LaboratorioIII.business.service.AsignaturaService;
+import utn.frbb.tup.LaboratorioIII.business.service.MateriaService;
 import utn.frbb.tup.LaboratorioIII.model.Alumno;
 import utn.frbb.tup.LaboratorioIII.model.Asignatura;
 import utn.frbb.tup.LaboratorioIII.model.EstadoAsignatura;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
-import utn.frbb.tup.LaboratorioIII.model.dto.AlumnoDto;
+import utn.frbb.tup.LaboratorioIII.model.dto.*;
 import utn.frbb.tup.LaboratorioIII.model.exception.AlumnoNotFoundException;
+import utn.frbb.tup.LaboratorioIII.model.exception.AsignaturaInexistenteException;
 import utn.frbb.tup.LaboratorioIII.model.exception.CorrelatividadesNoAprobadasException;
-import utn.frbb.tup.LaboratorioIII.model.exception.EstadoIncorrectoException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.AlumnoDao;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
 
 @Component
 public class AlumnoServiceImpl implements AlumnoService {
     private final AlumnoDao alumnoDao;
     private final AsignaturaService asignaturaService;
+    private final MateriaService materiaService;
+    private final CastingDtos castingDtos = new CastingDtos();
     @Autowired
-    public AlumnoServiceImpl(AlumnoDao alumnoDao, AsignaturaService asignaturaService){
+    public AlumnoServiceImpl(AlumnoDao alumnoDao, AsignaturaService asignaturaService, MateriaService materiaService){
         this.alumnoDao = alumnoDao;
         this.asignaturaService = asignaturaService;
+        this.materiaService = materiaService;
     }
     @Override
-    public void aprobarAsignatura(int materiaId, int nota, long dni) throws EstadoIncorrectoException, CorrelatividadesNoAprobadasException {
+    public void aprobarAsignatura(int materiaId, int nota, long dni) throws CorrelatividadesNoAprobadasException, AlumnoNotFoundException {
         Asignatura a = asignaturaService.getAsignatura(materiaId, dni);
         for (Materia m:
              a.getMateria().getListaCorrelatividades()) {
             Asignatura correlativa = asignaturaService.getAsignatura(m.getMateriaId(), dni);
             if (!EstadoAsignatura.APROBADA.equals(correlativa.getEstado())) {
-                throw new CorrelatividadesNoAprobadasException("La materia " + m.getNombre() + " debe estar aprobada para aprobar " + a.getNombreAsignatura());
+                throw new CorrelatividadesNoAprobadasException("La materia " + m.getNombre() + " debe estar aprobada para aprobar " );
             }
         }
         a.aprobarAsignatura(nota);
@@ -43,21 +49,74 @@ public class AlumnoServiceImpl implements AlumnoService {
         alumnoDao.saveAlumno(alumno);
     }
     @Override
-    public Alumno crearAlumno(AlumnoDto alumno) {
-        Alumno a = new Alumno();
-        a.setNombre(alumno.getNombre());
-        a.setApellido(alumno.getApellido());
-        a.setDni(alumno.getDni());
-        Random random = new Random();
-        a.setId(random.nextInt(99) + 1);
+    public AlumnoDtoSalida crearAlumno(DtoAlumno dtoAlumno) throws AsignaturaInexistenteException, AlumnoNotFoundException {
+        Alumno alumno = new Alumno();
+        List<Map<String, String>> errores = castingAlumnoDto(alumno, dtoAlumno);
+        alumnoDao.saveAlumno(alumno);
 
-        alumnoDao.saveAlumno(a);
-        return a;
+        AlumnoDtoSalida alumnoDtoSalida = castingAlumnoDtoSalida(alumno);
+        alumnoDtoSalida.setStatus(errores);
+
+        return alumnoDtoSalida;
     }
     @Override
     public List<Alumno> buscarAlumno(String apellido) throws AlumnoNotFoundException {
         return alumnoDao.findAlumno(apellido);
     }
-    public void hola(){}
+    private List<Map<String, String>> castingAlumnoDto(Alumno alumno, DtoAlumno dtoAlumno) throws AsignaturaInexistenteException {
+        alumno.setNombre(dtoAlumno.getNombre());
+        alumno.setApellido(dtoAlumno.getApellido());
+        alumno.setDni(dtoAlumno.getDni());
+
+        List<Asignatura> registrado = new ArrayList<>();
+        List<Integer> idAsignaturas = dtoAlumno.getAsignaturasId();
+        List<Map<String,String>> posiblesErrores = new ArrayList<>();
+
+        if(dtoAlumno.getAsignaturasId() != null){
+            List<Materia> materiasInscripto = materiaService.getListaMateriaPorId(idAsignaturas,posiblesErrores);
+
+            for(Materia m : materiasInscripto){
+                Asignatura asignatura = new Asignatura(m);
+                registrado.add(asignatura);
+            }
+            alumno.setListaAsignaturas(registrado);
+            return posiblesErrores;
+        }else{
+            throw new AsignaturaInexistenteException("EL ALUMNO DEBE ESTAR INSCRIPTO EN ALGUNA MATERIA");
+        }
+    }
+    private AlumnoDtoSalida castingAlumnoDtoSalida(Alumno alumno){
+        AlumnoDtoSalida alumnoDtoSalida = new AlumnoDtoSalida(alumno.getNombre(),
+                alumno.getApellido(),alumno.getDni());
+        List<Asignatura> asignaturas = alumno.getListaAsignaturas();
+
+        List<AsignaturaDtoSalida> asignaturaRegistrado = new ArrayList<>();
+
+        for(Asignatura a : asignaturas){
+            AsignaturaDtoSalida asignaturaDtoSalida = new AsignaturaDtoSalida();
+
+            asignaturaDtoSalida.setNombre(a.getMateria().getNombre());
+            asignaturaDtoSalida.setAnio(a.getMateria().getAnio());
+            asignaturaDtoSalida.setCuatrimestre(a.getMateria().getCuatrimestre());
+            if(a.getMateria().getProfesor() != null){
+                asignaturaDtoSalida.setProfesor(a.getMateria().getProfesor().getApellido());
+            }
+            asignaturaDtoSalida.setEstado(a.getEstado());
+
+            List<Materia> correlativas = a.getMateria().getListaCorrelatividades();
+            if(correlativas != null){
+                for(Materia m : correlativas){
+                    asignaturaDtoSalida.setCorrelativas(m.getNombre());
+                }
+            }
+
+            asignaturaDtoSalida.setNota(a.getNota());
+            asignaturaRegistrado.add(asignaturaDtoSalida);
+        }
+
+        alumnoDtoSalida.setAsignaturas(asignaturaRegistrado);
+        return alumnoDtoSalida;
+    }
+
 
 }

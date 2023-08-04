@@ -4,26 +4,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import utn.frbb.tup.LaboratorioIII.business.service.AlumnoService;
 import utn.frbb.tup.LaboratorioIII.model.Alumno;
-import utn.frbb.tup.LaboratorioIII.model.dto.AlumnoDto;
+import utn.frbb.tup.LaboratorioIII.model.dto.DtoAlumno;
+import utn.frbb.tup.LaboratorioIII.model.dto.AlumnoDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.exception.AlumnoNotFoundException;
+import utn.frbb.tup.LaboratorioIII.model.exception.AsignaturaInexistenteException;
+
 import java.util.List;
 
 @RestController
 //Endpoint
-@RequestMapping("Alumno")
+@RequestMapping("alumno")
 public class AlumnoController {
-
-    //inyeccion de dependencia, clase que implementa alumno sevice. intancia de la clase implementada(no haces ningun New)
     private final AlumnoService alumnoService;
     @Autowired
     public AlumnoController(AlumnoService alumnoService){
         this.alumnoService = alumnoService;
     }
     //Accesible desde un post
-    @PostMapping("/")
-    public Alumno crearAlumno(@RequestBody AlumnoDto alumnoDto) {
-
-        return alumnoService.crearAlumno(alumnoDto);
+    @PostMapping()
+    public AlumnoDtoSalida crearAlumno(@RequestBody DtoAlumno dtoAlumno) throws AsignaturaInexistenteException, AlumnoNotFoundException {
+        return alumnoService.crearAlumno(dtoAlumno);
     }
     @GetMapping
     public List<Alumno> buscarAlumno(@RequestParam String apellido) throws AlumnoNotFoundException {

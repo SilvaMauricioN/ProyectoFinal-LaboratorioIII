@@ -6,8 +6,8 @@ import utn.frbb.tup.LaboratorioIII.business.service.MateriaService;
 import utn.frbb.tup.LaboratorioIII.business.service.ProfesorService;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
+import utn.frbb.tup.LaboratorioIII.model.dto.DtoProfesor;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
-import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.ProfesorDao;
@@ -17,31 +17,33 @@ import java.util.*;
 public class ProfesorServiceImpl implements ProfesorService {
     private final ProfesorDao profesorDao;
     private final MateriaService materiaService;
+    private final CastingDtos castingDtos;
     @Autowired
     public ProfesorServiceImpl(ProfesorDao profesorDao,MateriaService materiaService){
         this.profesorDao = profesorDao;
         this.materiaService = materiaService;
+        this.castingDtos = new CastingDtos();
     }
     @Override
-    public ProfesorDtoSalida crearProfesor(ProfesorDto profesorDto) throws ProfesorException{
+    public ProfesorDtoSalida crearProfesor(DtoProfesor dtoProfesor) throws ProfesorException{
         Profesor profesor = new Profesor();
         List<Map<String,String>> posiblesErrores = new ArrayList<>();
-        posiblesErrores = castingProfesorDto(profesor,profesorDto);
+        posiblesErrores = castingProfesorDto(profesor, dtoProfesor);
         profesorDao.saveProfesor(profesor);
 
-        ProfesorDtoSalida profesorDtoSalida = castingProfesorDtoSalida(profesor);
+        ProfesorDtoSalida profesorDtoSalida = castingDtos.convertirAprofesorDtoSalida(profesor);
         profesorDtoSalida.setStatus(posiblesErrores);
         return profesorDtoSalida;
     }
     @Override
-    public ProfesorDtoSalida actualizarProfesor(Integer id, ProfesorDto profesorDto) throws ProfesorException{
+    public ProfesorDtoSalida actualizarProfesor(Integer id, DtoProfesor dtoProfesor) throws ProfesorException{
         Profesor profesor = profesorDao.findProfesor(id);
         eliminarMateriasDictadas(profesor);
         List<Map<String,String>> posiblesErrores = new ArrayList<>();
-        posiblesErrores = castingProfesorDto(profesor,profesorDto);
+        posiblesErrores = castingProfesorDto(profesor, dtoProfesor);
 
         profesorDao.upDateProfesor(profesor);
-        ProfesorDtoSalida profesorDtoSalida = castingProfesorDtoSalida(profesor);
+        ProfesorDtoSalida profesorDtoSalida = castingDtos.convertirAprofesorDtoSalida(profesor);
         profesorDtoSalida.setStatus(posiblesErrores);
         return profesorDtoSalida;
     }
@@ -51,7 +53,7 @@ public class ProfesorServiceImpl implements ProfesorService {
         List<ProfesorDtoSalida> profesoresSalida = new ArrayList<>();
         if(!guardados.isEmpty()){
             for(Profesor p: guardados){
-                ProfesorDtoSalida profesorDtoSalida = castingProfesorDtoSalida(p);
+                ProfesorDtoSalida profesorDtoSalida = castingDtos.convertirAprofesorDtoSalida(p);
                 profesoresSalida.add(profesorDtoSalida);
             }
         }
@@ -60,7 +62,7 @@ public class ProfesorServiceImpl implements ProfesorService {
     @Override
     public ProfesorDtoSalida findProfesor(int profesorDni) throws ProfesorException {
         Profesor profesor = profesorDao.findProfesor(profesorDni);
-        return castingProfesorDtoSalida(profesor);
+        return castingDtos.convertirAprofesorDtoSalida(profesor);
     }
     @Override
     public List<MateriaDtoSalida> getMateriasDictadas(Integer idProfesor) throws ProfesorException {
@@ -69,7 +71,7 @@ public class ProfesorServiceImpl implements ProfesorService {
         List<MateriaDtoSalida> materiasDictadasDTO = new ArrayList<>();
         if(MateriasDictadas != null){
             for(Materia m: MateriasDictadas){
-                materiasDictadasDTO.add(materiaService.castingMateriaDtoSalida(m));
+                materiasDictadasDTO.add(castingDtos.convertirAmateriaDtoSalida(m));
             }
             Collections.sort(materiasDictadasDTO);
         }
@@ -86,44 +88,13 @@ public class ProfesorServiceImpl implements ProfesorService {
         }
         profesorDao.deleteProfesor(idProfesor);
     }
-    private ProfesorDtoSalida castingProfesorDtoSalida(Profesor profesor) throws ProfesorException {
-        ProfesorDtoSalida profesorDtoSalida = new ProfesorDtoSalida(profesor.getNombre(),
-                profesor.getApellido(), profesor.getTitulo(), profesor.getDni());
+    private List<Map<String,String>> castingProfesorDto(Profesor profesor, DtoProfesor dtoProfesor) throws ProfesorException {
+        profesor.setNombre(dtoProfesor.getNombre());
+        profesor.setApellido(dtoProfesor.getApellido());
+        profesor.setTitulo(dtoProfesor.getTitulo());
+        profesor.setDni(dtoProfesor.getDni());
 
-        List<MateriaDtoSalida> materiaDtoSalidas = new ArrayList<>();
-        if(profesor.getMateriasDictadas() != null){
-            materiaDtoSalidas = getMateriasDictadas(profesor.getProfesorId());
-        }
-        profesorDtoSalida.setMaterias(materiaDtoSalidas);
-        return profesorDtoSalida;
-    }
-//    private MateriaDtoSalida castingMateriaDtoSalida(Materia m){
-//        MateriaDtoSalida materiaSalida = new MateriaDtoSalida();
-//        List<MateriaDtoSalida> materiasCorrelativasDto = new ArrayList<>();
-//
-//        materiaSalida.setNombre(m.getNombre());
-//        materiaSalida.setYear(m.getAnio());
-//        materiaSalida.setCuatrimestre(m.getCuatrimestre());
-//
-//        if(m.getListaCorrelatividades() == null){
-//            materiaSalida.setCorrelativas(materiasCorrelativasDto);
-//        }else{
-//            List<Materia> materiasCorrelativas = m.getListaCorrelatividades();
-//            for(Materia materia: materiasCorrelativas){
-//                MateriaDtoSalida materiaDtoSalida = castingMateriaDtoSalida(materia);
-//                materiasCorrelativasDto.add(materiaDtoSalida);
-//            }
-//        }
-//        materiaSalida.setCorrelativas(materiasCorrelativasDto);
-//        return materiaSalida;
-//    }
-    private List<Map<String,String>> castingProfesorDto(Profesor profesor, ProfesorDto profesorDto) throws ProfesorException {
-        profesor.setNombre(profesorDto.getNombre());
-        profesor.setApellido(profesorDto.getApellido());
-        profesor.setTitulo(profesorDto.getTitulo());
-        profesor.setDni(profesorDto.getDni());
-
-        List<Integer> Idmaterias = profesorDto.getMateriasDictadasID();
+        List<Integer> Idmaterias = dtoProfesor.getMateriasDictadasID();
         List<Map<String, String>> status = new ArrayList<>();
         List<Materia> listaMateriasDictadas = materiaService.getListaMateriaPorId(Idmaterias,status);
 

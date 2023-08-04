@@ -1,9 +1,13 @@
 package utn.frbb.tup.LaboratorioIII.model.dto;
 
-public class AlumnoDto {
+import java.util.ArrayList;
+import java.util.List;
+
+public class DtoAlumno {
     String nombre;
     String apellido;
     Long dni;
+    List<Integer> asignaturasId = new ArrayList<>();
 
     public String getNombre() {
         return nombre;
@@ -28,4 +32,11 @@ public class AlumnoDto {
     public void setDni(long dni) {
         this.dni = dni;
     }
+    public List<Integer> getAsignaturasId() {
+        return asignaturasId;
+    }
+    public void setAsignaturasId(List<Integer> asignaturasId) {
+        this.asignaturasId = asignaturasId;
+    }
+
 }
