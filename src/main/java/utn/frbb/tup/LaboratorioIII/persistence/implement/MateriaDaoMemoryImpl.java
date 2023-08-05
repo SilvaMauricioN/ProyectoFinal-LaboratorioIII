@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
+import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import utn.frbb.tup.LaboratorioIII.persistence.GeneradorId;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.MateriaDao;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.ProfesorDao;
@@ -26,29 +27,30 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
         inicializarMateria();
     }
     private synchronized void inicializarMateria() throws MateriaNotFoundException {
-//        Profesor p1;
-//        Profesor p2;
-//
-//        try {
-//            p1 = profesorDao.findProfesor(1);
-//            p2 = profesorDao.findProfesor(2);
-//        } catch (ProfesorException e) {
-//            throw new RuntimeException(e);
-//        }
+        String[] nombresMateriasPrimer = {"Programacion I", "Laboratorio I", "Sistema de Datos", "Ingles I"};
+        String[] nombresMateriasSegundo = {"Programacion II", "Laboratorio II", "Sistemas Operativos", "Ingles II"};
+        List<Materia> materias = new ArrayList<>();
 
-        Materia m = new Materia("Laboratorio I", 1, 1);
-        Materia m1 = new Materia("Laboratorio II", 1, 1);
-//
-//        m.setProfesor(p1);
-//        m1.setProfesor(p2);
+        for (int i = 0; i < 4; i++) {
+            materias.add(new Materia(nombresMateriasPrimer[i], 1, 1));
+        }
+        for (int i = 0; i < 4; i++) {
+            materias.add(new Materia(nombresMateriasSegundo[i], 1, 2));
+        }
 
-        saveMateria(m);
-        saveMateria(m1);
+        for(int i =0; i<8; i++){
+            Materia a = materias.get(i);
+            try {
+                a.setProfesor(profesorDao.findProfesor(i + 1));
+            } catch (ProfesorException e){
+                throw new RuntimeException(e);
+            }
+        }
 
-//        m.setMateriaId(generadorId.getIdNuevo());
-//        m1.setMateriaId(generadorId.getIdNuevo());
-//        repositorioMateria.put(m.getMateriaId(),m);
-//        repositorioMateria.put(m1.getMateriaId(), m1);
+        for(int i = 0; i<8 ; i++){
+            saveMateria(materias.get(i));
+        }
+
     }
     @Override
     public synchronized void saveMateria(Materia materia) throws MateriaNotFoundException {
