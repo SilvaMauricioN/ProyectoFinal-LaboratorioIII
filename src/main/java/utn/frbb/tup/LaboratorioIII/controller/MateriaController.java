@@ -21,7 +21,7 @@ public class MateriaController {
         this.materiaService = materiaService;
     }
     @GetMapping("/{idMateria}")
-    public MateriaDtoSalida buscarMateria(@PathVariable("idMmateria") int materiaId) throws MateriaNotFoundException {
+    public MateriaDtoSalida buscarMateria(@PathVariable("idMateria") int materiaId) throws MateriaNotFoundException {
         return materiaService.findMateria(materiaId);
     }
     @GetMapping

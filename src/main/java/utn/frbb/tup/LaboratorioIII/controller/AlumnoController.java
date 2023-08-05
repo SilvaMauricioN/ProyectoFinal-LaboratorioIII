@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frbb.tup.LaboratorioIII.business.service.AlumnoService;
-import utn.frbb.tup.LaboratorioIII.model.Alumno;
 import utn.frbb.tup.LaboratorioIII.model.Nota;
 import utn.frbb.tup.LaboratorioIII.model.dto.*;
 import utn.frbb.tup.LaboratorioIII.model.exception.*;
@@ -27,8 +26,12 @@ public class AlumnoController {
         return alumnoService.crearAlumno(dtoAlumno);
     }
     @GetMapping
-    public List<Alumno> buscarAlumno(@RequestParam String apellido) throws AlumnoNotFoundException {
-        return alumnoService.buscarAlumno(apellido);
+    public List<AlumnoDtoSalida> buscarAlumno(@RequestParam String apellido) throws AlumnoNotFoundException {
+        return alumnoService.buscarAlumnoPorApellido(apellido);
+    }
+    @GetMapping("/{idAlumno}")
+    public AlumnoDtoSalida buscarAlumnoId(@PathVariable("idAlumno") Integer idAlumno) throws AlumnoNotFoundException {
+        return alumnoService.buscarAlumnoPorId(idAlumno);
     }
     @PutMapping("/{idAlumno}")
     public AlumnoDtoSalida actualizarAlumno(@PathVariable("idAlumno") Integer id, @RequestBody AlumnoDto alumnoDto) throws IllegalAccessException, AsignaturaInexistenteException, AlumnoNotFoundException {

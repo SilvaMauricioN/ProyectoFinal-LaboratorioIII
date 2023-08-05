@@ -20,14 +20,14 @@ public class AlumnoDaoMemoryImpl implements AlumnoDao {
     public AlumnoDaoMemoryImpl() throws AlumnoNotFoundException {
         inicializarAlumnos();
     }
-    private void inicializarAlumnos() throws AlumnoNotFoundException {
+    private synchronized void inicializarAlumnos() throws AlumnoNotFoundException {
 //        Alumno a1 = new Alumno("Mauricio","silva", 3569875);
 //        Alumno a2 = new Alumno("Rolando", "fernandez", 8745693);
 //        saveAlumno(a1);
 //        saveAlumno(a2);
     }
     @Override
-    public void saveAlumno(Alumno alumno) throws AlumnoNotFoundException {
+    public synchronized void saveAlumno(Alumno alumno) throws AlumnoNotFoundException {
         if(!repositorioAlumnos.containsValue(alumno)){
             int id = generadorId.getIdNuevo();
             alumno.setId(id);
@@ -40,7 +40,7 @@ public class AlumnoDaoMemoryImpl implements AlumnoDao {
     }
 
     @Override
-    public Alumno findAlumno(Integer id) throws AlumnoNotFoundException {
+    public synchronized Alumno findAlumnoId(Integer id) throws AlumnoNotFoundException {
         for(Alumno alumno : repositorioAlumnos.values()){
             if(alumno.getId() == id){
                 return alumno;
@@ -49,26 +49,26 @@ public class AlumnoDaoMemoryImpl implements AlumnoDao {
         throw new AlumnoNotFoundException("ALUMNO NO ENCONTRADO");
     }
     @Override
-    public List<Alumno> findAlumno(String apellido) throws AlumnoNotFoundException {
+    public synchronized List<Alumno> findAlumnoApellido(String apellido) throws AlumnoNotFoundException {
         List<Alumno> alumnosFind = new ArrayList<>();
 
         for (Alumno alumno: repositorioAlumnos.values()){
-            if (apellido.equals(alumno.getApellido())){
+            if (apellido.equalsIgnoreCase(alumno.getApellido())){
                 alumnosFind.add(alumno);
             }
         }
         if(!alumnosFind.isEmpty()){
             return alumnosFind;
         }
-        throw new AlumnoNotFoundException("Alumno No Encontrado");
+        throw new AlumnoNotFoundException("ALUMNO NO ENCONTRADO");
     }
     @Override
-    public void upDateAlumno(Alumno alumno) {
+    public synchronized void upDateAlumno(Alumno alumno) {
         repositorioAlumnos.put(alumno.getId(),alumno);
     }
 
     @Override
-    public void deleteAlumno(Integer idAlumno) {
+    public synchronized void deleteAlumno(Integer idAlumno) {
         repositorioAlumnos.remove(idAlumno);
 
     }

@@ -15,6 +15,7 @@ import utn.frbb.tup.LaboratorioIII.persistence.dao.AlumnoDao;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.AsignaturaDao;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,13 +45,27 @@ public class AlumnoServiceImpl implements AlumnoService {
         return alumnoDtoSalida;
     }
     @Override
-    public List<Alumno> buscarAlumno(String apellido) throws AlumnoNotFoundException {
-        return alumnoDao.findAlumno(apellido);
+    public List<AlumnoDtoSalida> buscarAlumnoPorApellido(String apellido) throws AlumnoNotFoundException {
+        List<Alumno> guardados = alumnoDao.findAlumnoApellido(apellido);
+        List<AlumnoDtoSalida> guardadosSalida = new ArrayList<>();
+
+        for(Alumno a : guardados){
+            AlumnoDtoSalida alumnoDtoSalida = castingDtos.aAlumnoDtoSalida(a);
+            guardadosSalida.add(alumnoDtoSalida);
+        }
+        return guardadosSalida;
+    }
+
+    @Override
+    public AlumnoDtoSalida buscarAlumnoPorId(Integer alumnoId) throws AlumnoNotFoundException {
+        Alumno alumno = alumnoDao.findAlumnoId(alumnoId);
+
+        return castingDtos.aAlumnoDtoSalida(alumno);
     }
 
     @Override
     public AlumnoDtoSalida actualizarAlumno(Integer id, AlumnoDto alumnoDto) throws AsignaturaInexistenteException, AlumnoNotFoundException {
-        Alumno alumno = alumnoDao.findAlumno(id);
+        Alumno alumno = alumnoDao.findAlumnoId(id);
 
         List<Map<String,String>> posiblesErrores = castingDtos.aAlumnoDto(alumno,alumnoDto);
 
@@ -64,7 +79,7 @@ public class AlumnoServiceImpl implements AlumnoService {
     }
     @Override
     public void deleteAlumno(Integer idAlumno) throws AlumnoNotFoundException, AsignaturaInexistenteException {
-        alumnoDao.findAlumno(idAlumno);
+        alumnoDao.findAlumnoId(idAlumno);
         alumnoDao.deleteAlumno(idAlumno);
         asignaturaDao.deleteAsignaturas(idAlumno);
     }
@@ -82,7 +97,7 @@ public class AlumnoServiceImpl implements AlumnoService {
     }
 
     public void actualizarMateriaEnAlumno(Integer idAlumno, Asignatura asignaturaActualizada) throws AlumnoNotFoundException {
-        Alumno alumno = alumnoDao.findAlumno(idAlumno);
+        Alumno alumno = alumnoDao.findAlumnoId(idAlumno);
         List<Asignatura> cursadas = alumno.getListaAsignaturas();
 
         for(int i = 0 ; i < cursadas.size(); i++ ){

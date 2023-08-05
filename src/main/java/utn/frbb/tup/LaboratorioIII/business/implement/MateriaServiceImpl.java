@@ -103,15 +103,17 @@ public class MateriaServiceImpl implements MateriaService {
 
     @Override
     public void deleteMateria(Integer idMateria) throws MateriaNotFoundException {
-        Materia materia = materiaDao.findMateria(idMateria);
-        Profesor profesor = materia.getProfesor();
+        Materia materiaPorEliminar = materiaDao.findMateria(idMateria);
+        Profesor profesor = materiaPorEliminar.getProfesor();
 
         if(profesor != null){
             List<Materia> dictadas  = profesor.getMateriasDictadas();
+            Iterator <Materia> iterador = dictadas.iterator();
 
-            for(Materia m :dictadas){
-                if(m.equals(materia)){
-                    dictadas.remove(m);
+            while(iterador.hasNext()){
+                Materia materia = iterador.next();
+                if(materia.equals(materiaPorEliminar)){
+                    iterador.remove();
                 }
             }
         }

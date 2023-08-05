@@ -14,8 +14,8 @@ import java.util.List;
 
 public interface AlumnoService {
     AlumnoDtoSalida crearAlumno(AlumnoDto dtoAlumno) throws AsignaturaInexistenteException, AlumnoNotFoundException;
-    List<Alumno> buscarAlumno(String apellido) throws AlumnoNotFoundException;
-
+    List<AlumnoDtoSalida> buscarAlumnoPorApellido(String apellido) throws AlumnoNotFoundException;
+    AlumnoDtoSalida buscarAlumnoPorId(Integer alumnoId) throws AlumnoNotFoundException;
     AlumnoDtoSalida actualizarAlumno(Integer id, AlumnoDto alumnoDto) throws AsignaturaInexistenteException, AlumnoNotFoundException;
 
     void deleteAlumno(Integer idAlumno) throws AlumnoNotFoundException, AsignaturaInexistenteException;
