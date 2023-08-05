@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
 @JsonPropertyOrder({"nombre", "apellido", "titulo", "dni", "materias", "status"})
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ProfesorDtoSalida{
@@ -57,6 +59,31 @@ public class ProfesorDtoSalida{
     }
     public void setStatus(List<Map<String, String>> status) {
         this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProfesorDtoSalida that = (ProfesorDtoSalida) o;
+        return Objects.equals(nombre, that.nombre) && Objects.equals(apellido, that.apellido) && Objects.equals(titulo, that.titulo) && Objects.equals(dni, that.dni) && Objects.equals(materias, that.materias) && Objects.equals(status, that.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nombre, apellido, titulo, dni, materias, status);
+    }
+
+    @Override
+    public String toString() {
+        return "ProfesorDtoSalida{" +
+                "nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", titulo='" + titulo + '\'' +
+                ", dni=" + dni +
+                ", materias=" + materias +
+                ", status=" + status +
+                '}';
     }
 }
 

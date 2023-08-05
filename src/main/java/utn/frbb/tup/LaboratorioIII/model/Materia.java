@@ -26,6 +26,7 @@ public class Materia implements Comparable<Materia> {
         this.nombre = nombre;
         this.anio = anio;
         this.cuatrimestre = cuatrimestre;
+        listaCorrelatividades = new ArrayList<>();
     }
     public int getMateriaId() {
         return materiaId;

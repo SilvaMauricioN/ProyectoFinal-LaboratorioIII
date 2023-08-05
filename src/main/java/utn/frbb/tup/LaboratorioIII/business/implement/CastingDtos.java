@@ -53,20 +53,24 @@ public class CastingDtos {
     }
     //ProfesorDtosSalida con materias dictadas
     public ProfesorDtoSalida aProfesorDtoSalida(Profesor profesor){
-        ProfesorDtoSalida profesorDtoSalida = new ProfesorDtoSalida(profesor.getNombre(),
-                profesor.getApellido(), profesor.getTitulo(), profesor.getDni());
+        if(profesor.getNombre() != null){
+            ProfesorDtoSalida profesorDtoSalida = new ProfesorDtoSalida(profesor.getNombre(),
+                    profesor.getApellido(), profesor.getTitulo(), profesor.getDni());
 
-        List<MateriaDtoSalida> materiaDtoSalidas = new ArrayList<>();
-        if(profesor.getMateriasDictadas() != null){
-            List<Materia> materiasDictadas = profesor.getMateriasDictadas();
+            List<MateriaDtoSalida> materiaDtoSalidas = new ArrayList<>();
+            if(profesor.getMateriasDictadas() != null){
+                List<Materia> materiasDictadas = profesor.getMateriasDictadas();
 
-            for(Materia m : materiasDictadas){
-                MateriaDtoSalida materiaDtoSalida = aMateriaDtoSalida(m);
-                materiaDtoSalidas.add(materiaDtoSalida);
+                for(Materia m : materiasDictadas){
+                    MateriaDtoSalida materiaDtoSalida = aMateriaDtoSalida(m);
+                    materiaDtoSalidas.add(materiaDtoSalida);
+                }
             }
+            profesorDtoSalida.setMaterias(materiaDtoSalidas);
+            return profesorDtoSalida;
         }
-        profesorDtoSalida.setMaterias(materiaDtoSalidas);
-        return profesorDtoSalida;
+        return new ProfesorDtoSalida();
+
     }
     public ProfesorDtoSalida toProfesorDtoSalida(Profesor profesor){
         ProfesorDtoSalida profesorDtoSalida = new ProfesorDtoSalida();
@@ -118,7 +122,6 @@ public class CastingDtos {
         materia.setCuatrimestre(dtoMateria.getCuatrimestre());
 
         List<Integer> correlatividadesDtoId = dtoMateria.getListaCorrelatividades();
-
         if(correlatividadesDtoId.contains(materia.getMateriaId())){
             throw new CorrelatividadException("LA MATERIA " + materia.getNombre() + " NO PUEDE SER SU PROPIA CORRELATIVA ");
         }else{

@@ -68,4 +68,15 @@ public class Profesor {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "Profesor{" +
+                "profesorId=" + profesorId +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", titulo='" + titulo + '\'' +
+                ", dni=" + dni +
+                '}';
+    }
 }
