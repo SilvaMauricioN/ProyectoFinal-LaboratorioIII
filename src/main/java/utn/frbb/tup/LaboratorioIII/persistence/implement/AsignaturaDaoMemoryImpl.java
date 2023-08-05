@@ -22,16 +22,19 @@ public class AsignaturaDaoMemoryImpl implements AsignaturaDao {
     }
     @Override
     public synchronized Asignatura findAsignatura(Integer AlumnoId, Integer AsignaturaId) throws AsignaturaInexistenteException {
+
         if(repositorioAsignatura.containsKey(AlumnoId)){
             List<Asignatura> asignaturas = repositorioAsignatura.get(AlumnoId);
 
             for(Asignatura a: asignaturas){
-                if(a.getMateria().getMateriaId() == AsignaturaId){
+                if(AsignaturaId.equals(a.getMateria().getMateriaId())){
                     return a;
+                }else{
+                    return null;
                 }
             }
         }
-        throw new AsignaturaInexistenteException("NO EXISTE ALUMNO NI ASIGNATURA");
+        throw new AsignaturaInexistenteException("NO EXISTE ALUMNO");
     }
     @Override
     public synchronized void upDateAsignatura(Integer Alumnoid, Asignatura asignaturaActualizada) {

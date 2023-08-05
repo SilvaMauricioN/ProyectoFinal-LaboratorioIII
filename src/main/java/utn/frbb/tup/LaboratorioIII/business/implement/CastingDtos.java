@@ -29,25 +29,27 @@ public class CastingDtos {
 
     //Metodos Entidades de Salida
     public MateriaDtoSalida aMateriaDtoSalida(Materia materia){
-        MateriaDtoSalida materiaSalida = new MateriaDtoSalida();
-        List<MateriaDtoSalida> materiasCorrelativasDto = new ArrayList<>();
+        if(materia.getNombre() != null){
+            MateriaDtoSalida materiaSalida = new MateriaDtoSalida();
+            List<MateriaDtoSalida> materiasCorrelativasDto = new ArrayList<>();
 
-        materiaSalida.setNombre(materia.getNombre());
-        materiaSalida.setAnio(materia.getAnio());
-        materiaSalida.setCuatrimestre(materia.getCuatrimestre());
+            materiaSalida.setNombre(materia.getNombre());
+            materiaSalida.setAnio(materia.getAnio());
+            materiaSalida.setCuatrimestre(materia.getCuatrimestre());
 
-        if(materia.getListaCorrelatividades() == null){
-            materiaSalida.setCorrelativas(materiasCorrelativasDto);
-        }else{
-            List<Materia> materiasCorrelativas = materia.getListaCorrelatividades();
-            for(Materia m: materiasCorrelativas){
-                MateriaDtoSalida materiaDtoSalida = aMateriaDtoSalida(m);
-                materiasCorrelativasDto.add(materiaDtoSalida);
+            if(materia.getListaCorrelatividades() == null){
+                materiaSalida.setCorrelativas(materiasCorrelativasDto);
+            }else{
+                List<Materia> materiasCorrelativas = materia.getListaCorrelatividades();
+                for(Materia m: materiasCorrelativas){
+                    MateriaDtoSalida materiaDtoSalida = aMateriaDtoSalida(m);
+                    materiasCorrelativasDto.add(materiaDtoSalida);
+                }
             }
+            materiaSalida.setCorrelativas(materiasCorrelativasDto);
+            return materiaSalida;
         }
-        materiaSalida.setCorrelativas(materiasCorrelativasDto);
-        return materiaSalida;
-
+        return new MateriaDtoSalida();
     }
     //ProfesorDtosSalida con materias dictadas
     public ProfesorDtoSalida aProfesorDtoSalida(Profesor profesor){

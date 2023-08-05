@@ -9,6 +9,7 @@ public class CustomApiError {
 
     private Integer errorCode;
     private String errorMessage;
+    private String uri;
 
     public Integer getErrorCode() {
         return errorCode;
@@ -26,4 +27,11 @@ public class CustomApiError {
         this.errorMessage = errorMessage;
     }
 
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
 }

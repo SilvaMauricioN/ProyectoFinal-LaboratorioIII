@@ -22,8 +22,8 @@ public class ProfesorDaoMemoryImpl implements ProfesorDao {
         inicializarProfesor();
     }
     private synchronized void inicializarProfesor() throws ProfesorException {
-        String[] apellidos =  {"Coppo","Troilo","Padilla","Balmaceda", "Torre","Reale","Ustarroz", "Allende"};
-        String[] nombres = {"Ricardo", "Juan", "Maria jose", "Luciano", "Matias", "Ricardo","Marcos", "Carla"};
+        String[] apellidos =  {"Coppo","Troilo","Padilla","Balmaceda"};
+        String[] nombres = {"Ricardo", "Juan", "Maria jose", "Luciano"};
         List<Profesor> guardados = new ArrayList<>();
         for(int i = 0; i<apellidos.length;i++ ){
             saveProfesor(new Profesor(apellidos[i],nombres[i],"Lic.",35432567 + (i*100)));

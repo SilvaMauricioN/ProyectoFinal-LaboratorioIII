@@ -28,17 +28,13 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
     }
     private synchronized void inicializarMateria() throws MateriaNotFoundException {
         String[] nombresMateriasPrimer = {"Programacion I", "Laboratorio I", "Sistema de Datos", "Ingles I"};
-        String[] nombresMateriasSegundo = {"Programacion II", "Laboratorio II", "Sistemas Operativos", "Ingles II"};
         List<Materia> materias = new ArrayList<>();
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < nombresMateriasPrimer.length; i++) {
             materias.add(new Materia(nombresMateriasPrimer[i], 1, 1));
         }
-        for (int i = 0; i < 4; i++) {
-            materias.add(new Materia(nombresMateriasSegundo[i], 1, 2));
-        }
 
-        for(int i =0; i<8; i++){
+        for(int i =0; i<materias.size(); i++){
             Materia a = materias.get(i);
             try {
                 a.setProfesor(profesorDao.findProfesor(i + 1));
@@ -47,7 +43,7 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
             }
         }
 
-        for(int i = 0; i<8 ; i++){
+        for(int i = 0; i< materias.size() ; i++){
             saveMateria(materias.get(i));
         }
 

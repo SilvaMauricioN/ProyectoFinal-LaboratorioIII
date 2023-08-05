@@ -17,8 +17,10 @@ public class GlobalResponseEntityExceptionHandler {
         String mensajeError = "El cuerpo de la Solicitud es Inválido.";
 
         CustomApiError error = new CustomApiError();
+        String uri = request.getContextPath();
         error.setErrorCode(status.value());
         error.setErrorMessage(mensajeError);
+        error.setUri(uri);
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
     }
@@ -26,6 +28,7 @@ public class GlobalResponseEntityExceptionHandler {
         if (body == null) {
             CustomApiError error = new CustomApiError();
             error.setErrorMessage(ex.getMessage());
+            error.setUri(request.getContextPath());
             body = error;
         }
         return new ResponseEntity<>(body, headers, status);

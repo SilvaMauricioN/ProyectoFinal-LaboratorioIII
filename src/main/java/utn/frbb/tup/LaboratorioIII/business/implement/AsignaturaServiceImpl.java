@@ -2,7 +2,6 @@ package utn.frbb.tup.LaboratorioIII.business.implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import utn.frbb.tup.LaboratorioIII.business.service.AsignaturaService;
 import utn.frbb.tup.LaboratorioIII.model.Asignatura;
 import utn.frbb.tup.LaboratorioIII.model.EstadoAsignatura;
@@ -25,18 +24,18 @@ public class AsignaturaServiceImpl implements AsignaturaService {
     }
     @Override
     public Asignatura getAsignatura(Integer idAlumno, Integer idAsignatura) throws AsignaturaInexistenteException {
-
-        return asignaturaDao.findAsignatura(idAsignatura,idAsignatura);
+        return asignaturaDao.findAsignatura(idAlumno,idAsignatura);
     }
     public Asignatura aprobarAsignatura(Integer idAlumno, Integer idAsignatura, Nota nota) throws CorrelatividadesNoAprobadasException, EstadoIncorrectoException, AsignaturaInexistenteException {
-        Asignatura asignatura = getAsignatura(idAlumno,idAsignatura);
+        Asignatura asignatura =  asignaturaDao.findAsignatura(idAlumno,idAsignatura);
         asignatura.cursarAsignatura();
         List<Materia> correlativas = asignatura.getMateria().getListaCorrelatividades();
-
-        for(Materia m: correlativas){
-            Asignatura correlativa = getAsignatura(idAlumno, m.getMateriaId());
-            if (!EstadoAsignatura.APROBADA.equals(correlativa.getEstado())) {
-                throw new CorrelatividadesNoAprobadasException("LA MATERIA " + m.getNombre() + " DEBE ESTAR CURSADA PARA APROBAR");
+        if(correlativas != null){
+            for(Materia m: correlativas){
+                Asignatura correlativa = asignaturaDao.findAsignatura(idAlumno, m.getMateriaId());
+                if (correlativa == null || !EstadoAsignatura.APROBADA.equals(correlativa.getEstado())) {
+                    throw new CorrelatividadesNoAprobadasException("LA MATERIA " + m.getNombre() + " DEBE ESTAR CURSADA PARA APROBAR");
+                }
             }
         }
         asignatura.aprobarAsignatura(nota.nota());

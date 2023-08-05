@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frbb.tup.LaboratorioIII.business.service.AlumnoService;
+import utn.frbb.tup.LaboratorioIII.model.EstadoAsignatura;
 import utn.frbb.tup.LaboratorioIII.model.Nota;
 import utn.frbb.tup.LaboratorioIII.model.dto.*;
 import utn.frbb.tup.LaboratorioIII.model.exception.*;
@@ -49,8 +50,12 @@ public class AlumnoController {
     public AsignaturaDtoSalida actualizarEstadoAsignatura(@PathVariable("idAlumno") Integer idAlumno,
                                                           @PathVariable("idAsignatura") Integer idAsignatura,
                                                           @RequestBody Nota nota) throws AsignaturaInexistenteException, CorrelatividadesNoAprobadasException, EstadoIncorrectoException, AlumnoNotFoundException {
+        System.out.println(idAsignatura);
         if(nota.nota() < 0 || nota.nota() > 10){
             throw new IllegalArgumentException("LA NOTA DEBE ESTAR ENTRE 0 Y 10");
+        }
+        if(nota.estado() != EstadoAsignatura.CURSADA){
+            throw new EstadoIncorrectoException("LA MATERIA DEBE ESTAR CURSADA");
         }
         return alumnoService.modificaEstadoAsignatura(idAlumno, idAsignatura, nota);
     }

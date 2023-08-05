@@ -52,4 +52,12 @@ public class Asignatura {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Asignatura{" +
+                "materia=" + materia +
+                ", estado=" + estado +
+                ", nota=" + nota +
+                '}';
+    }
 }
