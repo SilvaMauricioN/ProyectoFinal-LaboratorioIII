@@ -1,5 +1,6 @@
 package utn.frbb.tup.LaboratorioIII.model.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProfesorDto {
@@ -8,6 +9,14 @@ public class ProfesorDto {
     private String titulo;
     private Integer dni;
     private List<Integer> materiasDictadasID;
+    public ProfesorDto(){}
+    public ProfesorDto(String nombre, String apellido, String titulo, Integer dni) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.titulo = titulo;
+        this.dni = dni;
+        this.materiasDictadasID = new ArrayList<>();
+    }
 
     public String getNombre() {
         return nombre;

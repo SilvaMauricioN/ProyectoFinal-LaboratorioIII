@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "profesorId")
 public class Profesor {
     private int profesorId;
@@ -67,6 +69,19 @@ public class Profesor {
                 materia.setProfesor(this);
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Profesor profesor = (Profesor) o;
+        return profesorId == profesor.profesorId && dni == profesor.dni && Objects.equals(nombre, profesor.nombre) && Objects.equals(apellido, profesor.apellido) && Objects.equals(titulo, profesor.titulo) && Objects.equals(materiasDictadas, profesor.materiasDictadas);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(profesorId, nombre, apellido, titulo, dni, materiasDictadas);
     }
 
     @Override

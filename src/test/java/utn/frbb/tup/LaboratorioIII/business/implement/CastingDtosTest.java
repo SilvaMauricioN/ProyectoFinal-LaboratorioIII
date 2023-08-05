@@ -10,19 +10,19 @@ import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDto;
 import utn.frbb.tup.LaboratorioIII.model.dto.MateriaDtoSalida;
+import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDto;
 import utn.frbb.tup.LaboratorioIII.model.dto.ProfesorDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.exception.CorrelatividadException;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
+import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.MateriaDao;
-
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
+
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -35,6 +35,7 @@ class CastingDtosTest {
     private static MateriaDto materiaDto1;
     private static Profesor profesor_1;
     private static ProfesorDtoSalida profesorEsperado;
+    private static ProfesorDto profesorDto;
     @InjectMocks
     CastingDtos castingDtos;
     @BeforeAll
@@ -48,6 +49,7 @@ class CastingDtosTest {
         materiaDto1 = new MateriaDto("Bases de Datos",2,1);
         profesor_1 = new Profesor("Luciano", "Salotto", "Lic. Ciencias Computación",1234321);
         profesorEsperado = new ProfesorDtoSalida("Luciano", "Salotto", "Lic. Ciencias Computación",1234321);
+        profesorDto = new ProfesorDto("Luciano", "Salotto", "Lic. Ciencias Computación",1234321);
     }
 
     @Test
@@ -152,17 +154,85 @@ class CastingDtosTest {
         assertEquals(listaMapEsperado,posiblesErrores);
         assertEquals(materiaEsperada,materia);
     }
-
-
     @Test
-    void aProfesorDto() {
+    void aProfesorDto() throws ProfesorException, MateriaNotFoundException {
+        List<Integer> idMaterias = new ArrayList<>(){{
+            add(1);
+            add(2);
+        }};
+        profesorDto.setMateriasDictadasID(idMaterias);
+        List<Materia> dictadas = new ArrayList<>(){{
+            add(materia_1);
+            add(materia_2);
+        }};
+
+        profesor_1.setListaMateriasDictadas(dictadas);
+        Profesor profesor = new Profesor();
+
+        when(materiaDao.findMateria(eq(1))).thenReturn(materia_1);
+        when(materiaDao.findMateria(eq(2))).thenReturn(materia_2);
+
+        List <Map<String,String>> posiblesErrores = castingDtos.aProfesorDto(profesor,profesorDto);
+
+        assertTrue(posiblesErrores.isEmpty());
+        assertEquals(profesor,profesor_1);
+    }
+    @Test
+    void getListaMateriaPorId() throws MateriaNotFoundException {
+        List<Integer> idMaterias = new ArrayList<>(){{
+            add(1);
+            add(2);
+            add(3);
+        }};
+        List<Materia> materiasEsperadas = new ArrayList<>(){{
+            add(materia_1);
+            add(materia_2);
+            add(materia_3);
+        }};
+
+        when(materiaDao.findMateria(eq(1))).thenReturn(materia_1);
+        when(materiaDao.findMateria(eq(2))).thenReturn(materia_2);
+        when(materiaDao.findMateria(eq(3))).thenReturn(materia_3);
+
+        List<Map<String,String>> posiblesErrores = new ArrayList<>();
+        List<Materia> materiasObtenidas = castingDtos.getListaMateriaPorId(idMaterias, posiblesErrores);
+
+        assertTrue(posiblesErrores.isEmpty());
+        assertEquals(materiasEsperadas,materiasObtenidas);
     }
 
     @Test
-    void aAlumnoDto() {
+    void getListaMateriaPorIdSinMateria() throws MateriaNotFoundException {
+        List<Integer> idMaterias = new ArrayList<>(){{
+            add(1);
+            add(2);
+            add(3);
+        }};
+        List<Materia> materiasEsperadas = new ArrayList<>(){{
+            add(materia_1);
+            add(materia_3);
+        }};
+
+        when(materiaDao.findMateria(eq(1))).thenReturn(materia_1);
+        when(materiaDao.findMateria(eq(2))).thenThrow(new MateriaNotFoundException("MATERIA NO ENCOTRADA"));
+        when(materiaDao.findMateria(eq(3))).thenReturn(materia_3);
+
+        List<Map<String,String>> posiblesErrores = new ArrayList<>();
+        List<Materia> materiasObtenidas = castingDtos.getListaMateriaPorId(idMaterias, posiblesErrores);
+
+        Map<String, String> errorEsperado = new HashMap<>() {{
+            put("Materia Id", "2");
+            put("Mensaje", "MATERIA NO ENCOTRADA");
+        }};
+        List<Map<String,String>> listaMapEsperado = new ArrayList<>(){{
+            add(errorEsperado);
+        }};
+        assertEquals(listaMapEsperado,posiblesErrores);
+        assertEquals(materiasEsperadas,materiasObtenidas);
     }
 
-    @Test
-    void getListaMateriaPorId() {
-    }
+
+
+
+
 }
