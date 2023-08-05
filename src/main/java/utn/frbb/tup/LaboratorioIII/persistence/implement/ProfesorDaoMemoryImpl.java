@@ -1,5 +1,7 @@
 package utn.frbb.tup.LaboratorioIII.persistence.implement;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
@@ -14,22 +16,25 @@ import java.util.Map;
 public class ProfesorDaoMemoryImpl implements ProfesorDao {
     private final Map<Integer, Profesor> repositorioProfesor= new HashMap<>();
     private final GeneradorId generadorId = GeneradorId.getInstance();
-    public ProfesorDaoMemoryImpl(){
+    private static final Logger log = LoggerFactory.getLogger(ProfesorDaoMemoryImpl.class);
+
+    public ProfesorDaoMemoryImpl() throws ProfesorException {
         inicializarProfesor();
     }
-    private synchronized void inicializarProfesor() {
+    private synchronized void inicializarProfesor() throws ProfesorException {
         Profesor p1 = new Profesor("Luciano", "Salotto", "Lic",3216598);
         Profesor p2 = new Profesor("Juan", "Perez", "Lic",5874613);
-        p1.setProfesorId(generadorId.getIdNuevo());
-        p2.setProfesorId(generadorId.getIdNuevo());
-        repositorioProfesor.put(p1.getProfesorId(), p1);
-        repositorioProfesor.put(p2.getProfesorId(),p2);
+        saveProfesor(p1);
+        saveProfesor(p2);
     }
     @Override
     public synchronized void saveProfesor(Profesor profesor) throws ProfesorException {
         if(!repositorioProfesor.containsValue(profesor)){
-            profesor.setProfesorId(generadorId.getIdNuevo());
+            int id = generadorId.getIdNuevo();
+            profesor.setProfesorId(id);
+
             repositorioProfesor.put(profesor.getProfesorId(),profesor);
+            log.info("Regristro Profesor: {} , id: {}",profesor.getApellido(), id);
         }else{
             throw new ProfesorException("PROFESOR YA GUARDADO");
         }

@@ -1,5 +1,7 @@
 package utn.frbb.tup.LaboratorioIII.persistence.implement;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import utn.frbb.tup.LaboratorioIII.model.Alumno;
 import utn.frbb.tup.LaboratorioIII.model.exception.AlumnoNotFoundException;
@@ -14,6 +16,7 @@ import java.util.Map;
 public class AlumnoDaoMemoryImpl implements AlumnoDao {
     private final Map<Integer, Alumno> repositorioAlumnos = new HashMap<>();
     private final GeneradorId generadorId = GeneradorId.getInstance();
+    private static final Logger log = LoggerFactory.getLogger(AlumnoDaoMemoryImpl.class);
     public AlumnoDaoMemoryImpl() throws AlumnoNotFoundException {
         inicializarAlumnos();
     }
@@ -26,8 +29,11 @@ public class AlumnoDaoMemoryImpl implements AlumnoDao {
     @Override
     public void saveAlumno(Alumno alumno) throws AlumnoNotFoundException {
         if(!repositorioAlumnos.containsValue(alumno)){
-            alumno.setId(generadorId.getIdNuevo());
+            int id = generadorId.getIdNuevo();
+            alumno.setId(id);
             repositorioAlumnos.put(alumno.getId(), alumno);
+            log.info("Regristro Alumno: {} , id: {}",alumno.getApellido(), id);
+
         }else{
             throw new AlumnoNotFoundException("EL ALUMNO YA EXISTE");
         }

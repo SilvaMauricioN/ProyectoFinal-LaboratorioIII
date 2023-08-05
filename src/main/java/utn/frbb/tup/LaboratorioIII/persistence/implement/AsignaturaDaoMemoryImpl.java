@@ -1,5 +1,7 @@
 package utn.frbb.tup.LaboratorioIII.persistence.implement;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import utn.frbb.tup.LaboratorioIII.model.Alumno;
 import utn.frbb.tup.LaboratorioIII.model.Asignatura;
@@ -12,9 +14,11 @@ import java.util.Map;
 @Component
 public class AsignaturaDaoMemoryImpl implements AsignaturaDao {
     private final Map<Integer, List<Asignatura>> repositorioAsignatura= new HashMap<>();
+    private static final Logger log = LoggerFactory.getLogger(AsignaturaDaoMemoryImpl.class);
     @Override
     public synchronized void saveAsignatura(Alumno alumno) {
         repositorioAsignatura.put(alumno.getId(),alumno.getListaAsignaturas());
+        log.info("Regristro Asignatura Alumno: {} , id: {}",alumno.getApellido(), alumno.getId());
     }
     @Override
     public synchronized Asignatura findAsignatura(Integer AlumnoId, Integer AsignaturaId) throws AsignaturaInexistenteException {
