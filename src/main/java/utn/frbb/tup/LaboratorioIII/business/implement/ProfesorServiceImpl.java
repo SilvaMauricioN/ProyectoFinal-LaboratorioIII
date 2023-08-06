@@ -28,9 +28,9 @@ public class ProfesorServiceImpl implements ProfesorService {
         List<Map<String,String>> posiblesErrores = new ArrayList<>();
         posiblesErrores = castingDtos.aProfesorDto(profesor, dtoProfesor);
         profesorDao.saveProfesor(profesor);
-
         ProfesorDtoSalida profesorDtoSalida = castingDtos.aProfesorDtoSalida(profesor);
         profesorDtoSalida.setStatus(posiblesErrores);
+
         return profesorDtoSalida;
     }
     @Override

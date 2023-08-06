@@ -27,6 +27,7 @@ public class CastingDtos {
         this.materiaDao = materiaDao;
     }
 
+
     //Metodos Entidades de Salida
     public MateriaDtoSalida aMateriaDtoSalida(Materia materia){
         if(materia.getNombre() != null){
@@ -53,7 +54,7 @@ public class CastingDtos {
     }
     //ProfesorDtosSalida con materias dictadas
     public ProfesorDtoSalida aProfesorDtoSalida(Profesor profesor){
-        if(profesor.getNombre() != null){
+        if(profesor != null){
             ProfesorDtoSalida profesorDtoSalida = new ProfesorDtoSalida(profesor.getNombre(),
                     profesor.getApellido(), profesor.getTitulo(), profesor.getDni());
 

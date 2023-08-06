@@ -6,6 +6,7 @@ import utn.frbb.tup.LaboratorioIII.model.EstadoAsignatura;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AsignaturaDtoSalida {
@@ -59,5 +60,16 @@ public class AsignaturaDtoSalida {
     }
     public void setNota(Optional<Integer> nota) {
         this.nota = nota;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AsignaturaDtoSalida that = (AsignaturaDtoSalida) o;
+        return Objects.equals(nombre, that.nombre) && Objects.equals(anio, that.anio) && Objects.equals(cuatrimestre, that.cuatrimestre) && Objects.equals(profesor, that.profesor) && Objects.equals(correlativas, that.correlativas) && estado == that.estado && Objects.equals(nota, that.nota);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(nombre, anio, cuatrimestre, profesor, correlativas, estado, nota);
     }
 }
