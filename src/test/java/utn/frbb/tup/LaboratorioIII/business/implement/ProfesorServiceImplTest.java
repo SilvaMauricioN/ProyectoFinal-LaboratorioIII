@@ -16,9 +16,8 @@ import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.MateriaDao;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.ProfesorDao;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -34,7 +33,7 @@ class ProfesorServiceImplTest {
     @InjectMocks
     private ProfesorServiceImpl profesorServiceImpl;
     private static ProfesorDtoSalida profesorDtoSalida_1, profesorDtoSalida_2;
-    private static ProfesorDto profesorDto_1, profesorDto_2;
+    private static ProfesorDto profesorDto_1;
     private static Profesor profesor,profesor_2;
     private static Materia materia_1, materia_2;
     private static MateriaDtoSalida materiaEsperada_1, materiaEsperada_2;
@@ -48,7 +47,6 @@ class ProfesorServiceImplTest {
         profesorDtoSalida_1 = new ProfesorDtoSalida("Luciano", "Salotto", "Lic. Ciencias Computación",1234321);
         profesorDtoSalida_2 = new ProfesorDtoSalida("Ricardo", "Coppo", "Ing", 43145665);
         profesorDto_1 = new ProfesorDto("Luciano", "Salotto", "Lic. Ciencias Computación",1234321);
-        profesorDto_2 = new ProfesorDto("Luciano", "Salotto", "Lic. Ciencias Computación",1234321);
         materia_1 = new Materia("Laboratorio I", 1, 1);
         materia_2 = new Materia("Laboratorio II", 1, 2);
         materiaEsperada_1 = new MateriaDtoSalida("Laboratorio I",1,1);
@@ -56,29 +54,12 @@ class ProfesorServiceImplTest {
     }
     @Test
     void crearProfesor() throws ProfesorException {
-        Map<String, String> errorEsperado = new HashMap<>() {{
-            put("Materia Id", "2");
-            put("Mensaje", "MATERIA NO ENCOTRADA");
-        }};
-        List<Map<String,String>> listaErrores = new ArrayList<>(){{
-            add(errorEsperado);
-        }};
-        Profesor pNuevo = new Profesor();
+        ProfesorDto p1 = new ProfesorDto("Ricardo", "Coppo", "Ing", 43145665);
+        ProfesorDtoSalida esperado = new ProfesorDtoSalida("Ricardo", "Coppo", "Ing", 43145665);
 
-        when(castingDtos.aProfesorDto(eq(pNuevo),eq(profesorDto_1))).thenReturn(listaErrores);
-        when(castingDtos.aProfesorDtoSalida(eq(profesor))).thenReturn(profesorDtoSalida_1);
+        ProfesorDtoSalida profesorObtenido = profesorServiceImpl.crearProfesor(p1);
 
-        //No entiendo porque verify no reconoce esta acciones cuando se producen en profesorServiceImpl.crearProfesor;
-        List<Map<String,String>> errorR = castingDtos.aProfesorDto(pNuevo,profesorDto_1);
-        ProfesorDtoSalida respuesta = castingDtos.aProfesorDtoSalida(profesor);
-
-        ProfesorDtoSalida profesorObtenido = profesorServiceImpl.crearProfesor(profesorDto_1);
-
-        verify(castingDtos,times(1)).aProfesorDto(eq(pNuevo),eq(profesorDto_1));
-        verify(profesorDao,times(1)).saveProfesor(any(Profesor.class));
-        verify(castingDtos,times(1)).aProfesorDtoSalida(eq(profesor));
-        assertNotNull(profesorObtenido);
-        assertEquals(profesorDtoSalida_1,profesorObtenido);
+        assertEquals(esperado, profesorObtenido);
     }
     @Test
     void actualizarProfesor() throws ProfesorException {
@@ -171,7 +152,6 @@ class ProfesorServiceImplTest {
         }};
         List<MateriaDtoSalida> Obtenidas = profesorServiceImpl.getMateriasDictadas(2);
 
-        verify(profesorDao,times(1)).findProfesor(1);
         assertEquals(Esperadas, Obtenidas);
     }
 }

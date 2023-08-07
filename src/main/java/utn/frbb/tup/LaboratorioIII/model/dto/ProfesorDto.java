@@ -2,6 +2,7 @@ package utn.frbb.tup.LaboratorioIII.model.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ProfesorDto {
     private String nombre;
@@ -56,5 +57,18 @@ public class ProfesorDto {
 
     public void setMateriasDictadasID(List<Integer> materiasDictadasID) {
         this.materiasDictadasID = materiasDictadasID;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProfesorDto that = (ProfesorDto) o;
+        return Objects.equals(nombre, that.nombre) && Objects.equals(apellido, that.apellido) && Objects.equals(titulo, that.titulo) && Objects.equals(dni, that.dni) && Objects.equals(materiasDictadasID, that.materiasDictadasID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nombre, apellido, titulo, dni, materiasDictadasID);
     }
 }

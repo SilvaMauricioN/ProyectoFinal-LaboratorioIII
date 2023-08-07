@@ -45,7 +45,7 @@ public class MateriaServiceImpl implements MateriaService {
     @Override
     public List<MateriaDtoSalida> getAllMaterias() {
         List<Materia> guardadas = materiaDao.getAllMaterias();
-        List<MateriaDtoSalida> materiasDtoSalida = new ArrayList<>();
+        List<MateriaDtoSalida> materiasDtoGuardadas = new ArrayList<>();
 
         if(!guardadas.isEmpty()){
             for(Materia m : guardadas){
@@ -54,10 +54,10 @@ public class MateriaServiceImpl implements MateriaService {
                     ProfesorDtoSalida profesorDtoSalida = castingDtos.toProfesorDtoSalida(m.getProfesor());
                     materiaDtoSalida.setProfesor(profesorDtoSalida);
                 }
-                materiasDtoSalida.add(materiaDtoSalida);
+                materiasDtoGuardadas.add(materiaDtoSalida);
             }
         }
-        return materiasDtoSalida;
+        return materiasDtoGuardadas;
     }
 
     @Override

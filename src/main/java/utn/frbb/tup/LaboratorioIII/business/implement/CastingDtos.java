@@ -134,27 +134,31 @@ public class CastingDtos {
         }
     }
     public List<Map<String,String>> aProfesorDto(Profesor profesor, ProfesorDto dtoProfesor) throws ProfesorException {
-        profesor.setNombre(dtoProfesor.getNombre());
-        profesor.setApellido(dtoProfesor.getApellido());
-        profesor.setTitulo(dtoProfesor.getTitulo());
-        profesor.setDni(dtoProfesor.getDni());
+        if(dtoProfesor != null){
+            profesor.setNombre(dtoProfesor.getNombre());
+            profesor.setApellido(dtoProfesor.getApellido());
+            profesor.setTitulo(dtoProfesor.getTitulo());
+            profesor.setDni(dtoProfesor.getDni());
 
-        List<Integer> Idmaterias = dtoProfesor.getMateriasDictadasID();
-        List<Map<String, String>> posiblesErrores = new ArrayList<>();
-        List<Materia> listaMateriasDictadas = getListaMateriaPorId(Idmaterias,posiblesErrores);
+            List<Integer> Idmaterias = dtoProfesor.getMateriasDictadasID();
+            List<Map<String, String>> posiblesErrores = new ArrayList<>();
+            List<Materia> listaMateriasDictadas = getListaMateriaPorId(Idmaterias,posiblesErrores);
 
-        //Agrego las materias a dictar por el profesor,
-        if(listaMateriasDictadas != null){
-            for(Materia m: listaMateriasDictadas){
-                //profesor nuevo, lista materias vacias
-                if(m.getProfesor() == null){
-                    profesor.setMateria(m);
-                }else{
-                    throw new ProfesorException("LA MATERIA " + m.getNombre() + " YA TIENE PROFESOR ASIGNADO");
+            //Agrego las materias a dictar por el profesor,
+            if(listaMateriasDictadas != null){
+                for(Materia m: listaMateriasDictadas){
+                    //profesor nuevo, lista materias vacias
+                    if(m.getProfesor() == null){
+                        profesor.setMateria(m);
+                    }else{
+                        throw new ProfesorException("LA MATERIA " + m.getNombre() + " YA TIENE PROFESOR ASIGNADO");
+                    }
                 }
             }
+            return posiblesErrores;
         }
-        return posiblesErrores;
+        throw new ProfesorException("SIN DATOS");
+
     }
     public  List<Map<String, String>> aAlumnoDto(Alumno alumno, AlumnoDto dtoAlumno) throws AsignaturaInexistenteException{
         alumno.setNombre(dtoAlumno.getNombre());

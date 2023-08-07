@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MateriaDto {
     private String nombre;
@@ -58,5 +59,18 @@ public class MateriaDto {
         } else {
             this.ListaCorrelatividades = listaCorrelatividades;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MateriaDto that = (MateriaDto) o;
+        return Objects.equals(nombre, that.nombre) && Objects.equals(year, that.year) && Objects.equals(cuatrimestre, that.cuatrimestre) && Objects.equals(profesorId, that.profesorId) && Objects.equals(ListaCorrelatividades, that.ListaCorrelatividades);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nombre, year, cuatrimestre, profesorId, ListaCorrelatividades);
     }
 }
