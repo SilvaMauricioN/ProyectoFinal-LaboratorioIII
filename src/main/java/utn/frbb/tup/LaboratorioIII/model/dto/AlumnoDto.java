@@ -9,6 +9,14 @@ public class AlumnoDto {
     Long dni;
     List<Integer> asignaturasId = new ArrayList<>();
 
+    public AlumnoDto(String nombre, String apellido, Long dni) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dni = dni;
+    }
+
+    public AlumnoDto(){}
+
     public String getNombre() {
         return nombre;
     }

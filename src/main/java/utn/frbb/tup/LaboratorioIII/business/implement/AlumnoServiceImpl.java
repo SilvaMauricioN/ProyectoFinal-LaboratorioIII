@@ -96,7 +96,7 @@ public class AlumnoServiceImpl implements AlumnoService {
         return castingDtos.aAsignaturaDtoSalida(asignatura);
     }
 
-    public void actualizarMateriaEnAlumno(Integer idAlumno, Asignatura asignaturaActualizada) throws AlumnoNotFoundException {
+    private void actualizarMateriaEnAlumno(Integer idAlumno, Asignatura asignaturaActualizada) throws AlumnoNotFoundException {
         Alumno alumno = alumnoDao.findAlumnoId(idAlumno);
         List<Asignatura> cursadas = alumno.getListaAsignaturas();
 
