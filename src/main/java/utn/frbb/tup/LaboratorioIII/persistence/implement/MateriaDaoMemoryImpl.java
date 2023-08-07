@@ -22,7 +22,7 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
     private final GeneradorId generadorId = GeneradorId.getInstance();
     private static final Logger log = LoggerFactory.getLogger(MateriaDaoMemoryImpl.class);
 
-    private MateriaDaoMemoryImpl(ProfesorDao profesorDao) throws MateriaNotFoundException {
+    public MateriaDaoMemoryImpl(ProfesorDao profesorDao) throws MateriaNotFoundException {
         this.profesorDao = profesorDao;
         inicializarMateria();
     }
@@ -46,7 +46,6 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
         for(int i = 0; i< materias.size() ; i++){
             saveMateria(materias.get(i));
         }
-
     }
     @Override
     public synchronized void saveMateria(Materia materia) throws MateriaNotFoundException {
@@ -68,7 +67,7 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
                 return materia;
             }
         }
-        throw new MateriaNotFoundException("MATERIA NO ENCOTRADA");
+        throw new MateriaNotFoundException("MATERIA NO ENCONTRADA");
     }
     @Override
     public synchronized List<Materia> getAllMaterias() {
@@ -84,7 +83,10 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
     }
 
     @Override
-    public synchronized void deleteMateria(Integer idMateria) {
+    public synchronized void deleteMateria(Integer idMateria) throws MateriaNotFoundException {
+        if (!repositorioMateria.containsKey(idMateria)) {
+            throw new MateriaNotFoundException("MATERIA ID: " + idMateria + " NO ENCONTRADA");
+        }
         repositorioMateria.remove(idMateria);
     }
 }

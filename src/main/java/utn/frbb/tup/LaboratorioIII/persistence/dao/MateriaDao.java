@@ -12,5 +12,5 @@ public interface MateriaDao {
 
     void upDateMateria(Materia materia);
 
-    void deleteMateria(Integer idMateria);
+    void deleteMateria(Integer idMateria) throws MateriaNotFoundException;
 }
