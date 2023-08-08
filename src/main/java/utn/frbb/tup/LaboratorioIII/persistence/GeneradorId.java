@@ -16,4 +16,7 @@ public class GeneradorId {
         }
         return IdActual = IdActual + 1;
     }
+    public void reset(){
+        IdActual = 0;
+    }
 }

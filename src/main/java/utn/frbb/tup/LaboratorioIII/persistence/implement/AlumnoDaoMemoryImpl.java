@@ -17,14 +17,10 @@ public class AlumnoDaoMemoryImpl implements AlumnoDao {
     private final Map<Integer, Alumno> repositorioAlumnos = new HashMap<>();
     private final GeneradorId generadorId = GeneradorId.getInstance();
     private static final Logger log = LoggerFactory.getLogger(AlumnoDaoMemoryImpl.class);
-    public AlumnoDaoMemoryImpl() throws AlumnoNotFoundException {
+    public AlumnoDaoMemoryImpl(){
         inicializarAlumnos();
     }
-    private synchronized void inicializarAlumnos() throws AlumnoNotFoundException {
-//        Alumno a1 = new Alumno("Mauricio","silva", 3569875);
-//        Alumno a2 = new Alumno("Rolando", "fernandez", 8745693);
-//        saveAlumno(a1);
-//        saveAlumno(a2);
+    private synchronized void inicializarAlumnos(){
     }
     @Override
     public synchronized void saveAlumno(Alumno alumno) throws AlumnoNotFoundException {

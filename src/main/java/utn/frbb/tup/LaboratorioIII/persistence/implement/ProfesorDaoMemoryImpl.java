@@ -26,11 +26,14 @@ public class ProfesorDaoMemoryImpl implements ProfesorDao {
         String[] nombres = {"Ricardo", "Juan", "Maria jose", "Luciano"};
         List<Profesor> guardados = new ArrayList<>();
         for(int i = 0; i<apellidos.length;i++ ){
-            saveProfesor(new Profesor(apellidos[i],nombres[i],"Lic.",35432567 + (i*100)));
+            saveProfesor(new Profesor(nombres[i],apellidos[i],"Lic.",35432567 + (i*100)));
         }
     }
     @Override
     public synchronized void saveProfesor(Profesor profesor) throws ProfesorException {
+        if (profesor == null || profesor.getApellido() == null) {
+            throw new ProfesorException("PROFESOR NO PUEDE ESTAR SIN DATOS");
+        }
         if(!repositorioProfesor.containsValue(profesor)){
             int id = generadorId.getIdNuevo();
             profesor.setProfesorId(id);

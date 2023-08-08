@@ -10,6 +10,7 @@ import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.Profesor;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
+import utn.frbb.tup.LaboratorioIII.persistence.GeneradorId;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.ProfesorDao;
 
 import java.util.ArrayList;
@@ -25,8 +26,10 @@ class MateriaDaoMemoryImplTest {
     @InjectMocks
     MateriaDaoMemoryImpl materiaDaoMemoryImpl;
     private static Materia materia_1, materia_2, materia_3, materia_4;
+    private final GeneradorId generadorId = GeneradorId.getInstance();
     @BeforeEach
-    public void setUp() throws MateriaNotFoundException, ProfesorException {
+    public void setUp() {
+
         materia_1 = new Materia("Programacion I", 1, 1);
         materia_2 = new Materia("Laboratorio I", 1, 1);
         materia_3 = new Materia("Sistema de Datos", 1, 1);
@@ -76,7 +79,7 @@ class MateriaDaoMemoryImplTest {
     @Test
     void findMateriaException(){
         Exception exception = assertThrows(MateriaNotFoundException.class, () -> {
-            materiaDaoMemoryImpl.findMateria(5);
+            materiaDaoMemoryImpl.findMateria(10);
         });
 
         String MensajeEsperado = "MATERIA NO ENCONTRADA";
