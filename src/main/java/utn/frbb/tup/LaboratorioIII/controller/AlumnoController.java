@@ -13,7 +13,6 @@ import utn.frbb.tup.LaboratorioIII.model.exception.*;
 import java.util.List;
 
 @RestController
-//Endpoint
 @RequestMapping("alumno")
 public class AlumnoController {
     private final AlumnoService alumnoService;
@@ -23,11 +22,13 @@ public class AlumnoController {
     }
     //Accesible desde un post
     @PostMapping()
-    public AlumnoDtoSalida crearAlumno(@RequestBody AlumnoDto dtoAlumno) throws AsignaturaInexistenteException, AlumnoNotFoundException {
+    public AlumnoDtoSalida crearAlumno(@RequestBody AlumnoDto dtoAlumno) throws AsignaturaInexistenteException, AlumnoNotFoundException, IllegalAccessException {
+        Validator.ValidarCampos(dtoAlumno);
         return alumnoService.crearAlumno(dtoAlumno);
     }
     @GetMapping
-    public List<AlumnoDtoSalida> buscarAlumno(@RequestParam String apellido) throws AlumnoNotFoundException {
+    public List<AlumnoDtoSalida> buscarAlumno(@RequestParam String apellido) throws AlumnoNotFoundException, IllegalAccessException {
+        Validator.ValidarCampos(apellido);
         return alumnoService.buscarAlumnoPorApellido(apellido);
     }
     @GetMapping("/{idAlumno}")
@@ -49,8 +50,8 @@ public class AlumnoController {
     @PutMapping("/{idAlumno}/asignatura/{idAsignatura}")
     public AsignaturaDtoSalida actualizarEstadoAsignatura(@PathVariable("idAlumno") Integer idAlumno,
                                                           @PathVariable("idAsignatura") Integer idAsignatura,
-                                                          @RequestBody Nota nota) throws AsignaturaInexistenteException, CorrelatividadesNoAprobadasException, EstadoIncorrectoException, AlumnoNotFoundException {
-        System.out.println(idAsignatura);
+                                                          @RequestBody Nota nota) throws AsignaturaInexistenteException, CorrelatividadesNoAprobadasException, EstadoIncorrectoException, AlumnoNotFoundException, IllegalAccessException {
+
         if(nota.nota() < 0 || nota.nota() > 10){
             throw new IllegalArgumentException("LA NOTA DEBE ESTAR ENTRE 0 Y 10");
         }

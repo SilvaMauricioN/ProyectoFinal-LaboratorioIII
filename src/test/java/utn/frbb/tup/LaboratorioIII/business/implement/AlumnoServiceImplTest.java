@@ -16,7 +16,6 @@ import utn.frbb.tup.LaboratorioIII.model.exception.CorrelatividadesNoAprobadasEx
 import utn.frbb.tup.LaboratorioIII.model.exception.EstadoIncorrectoException;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.AlumnoDao;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.AsignaturaDao;
-import utn.frbb.tup.LaboratorioIII.persistence.dao.MateriaDao;
 
 import java.util.ArrayList;
 import java.util.List;

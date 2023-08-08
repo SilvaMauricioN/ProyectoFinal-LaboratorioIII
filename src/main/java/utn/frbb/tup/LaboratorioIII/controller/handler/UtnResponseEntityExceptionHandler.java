@@ -7,25 +7,38 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import utn.frbb.tup.LaboratorioIII.model.exception.*;
 
 @ControllerAdvice
 public class UtnResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class,ProfesorException.class, CorrelatividadException.class,Exception.class, EstadoIncorrectoException.class, CorrelatividadesNoAprobadasException.class})
+    @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class,ProfesorException.class,
+            CorrelatividadException.class,Exception.class, EstadoIncorrectoException.class,
+            CorrelatividadesNoAprobadasException.class, MethodArgumentTypeMismatchException.class})
     protected ResponseEntity<Object> handleConflict(Exception exception, WebRequest request) {
+
         HttpStatus status;
         String mensajeError = exception.getMessage();
 
         if(exception instanceof MateriaNotFoundException || exception instanceof AlumnoNotFoundException){
             status = HttpStatus.NOT_FOUND;
-        }else if((exception instanceof IllegalArgumentException ||
+        }else if(exception instanceof IllegalArgumentException ||
                 exception instanceof ProfesorException ||
                 exception instanceof CorrelatividadException ||
                 exception instanceof EstadoIncorrectoException ||
-                exception instanceof CorrelatividadesNoAprobadasException)){
+                exception instanceof CorrelatividadesNoAprobadasException){
 
             status = HttpStatus.BAD_REQUEST;
+        }else if( exception instanceof MethodArgumentTypeMismatchException){
+            status = HttpStatus.BAD_REQUEST;
+
+            String mensaje = "ARGUMENTO INVÁLIDO " +  ((MethodArgumentTypeMismatchException) exception).getValue();
+            CustomApiError error = new CustomApiError();
+            error.setErrorCode(status.value());
+            error.setErrorMessage(mensaje);
+            return handleExceptionInternal(exception, error, new HttpHeaders(), status, request);
+
         }else{
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
@@ -35,7 +48,6 @@ public class UtnResponseEntityExceptionHandler extends ResponseEntityExceptionHa
         error.setErrorCode(status.value());
         error.setErrorMessage(mensajeError);
         error.setUri(uri);
-
 
         return handleExceptionInternal(exception, error, new HttpHeaders(), status, request);
     }

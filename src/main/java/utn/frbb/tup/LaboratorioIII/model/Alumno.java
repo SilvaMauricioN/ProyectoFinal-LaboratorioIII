@@ -9,7 +9,6 @@ public class Alumno {
     private String apellido;
     private long dni;
     private List<Asignatura> listaAsignaturas;
-
     public Alumno(){};
     public Alumno(String nombre, String apellido, long dni) {
         this.nombre = nombre;
