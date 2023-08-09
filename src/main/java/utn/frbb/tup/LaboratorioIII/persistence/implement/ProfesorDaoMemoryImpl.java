@@ -54,8 +54,12 @@ public class ProfesorDaoMemoryImpl implements ProfesorDao {
         throw new ProfesorException("PROFESOR NO ENCONTRADO");
     }
     @Override
-    public synchronized List<Profesor> getAllProfesores() {
-        return new ArrayList<>(repositorioProfesor.values());
+    public synchronized List<Profesor> getAllProfesores() throws ProfesorException {
+        List<Profesor> guardados = new ArrayList<>(repositorioProfesor.values());
+        if(guardados.isEmpty()){
+            throw new ProfesorException("SIN PROFESORES GUARDADOS");
+        }
+        return guardados;
     }
     @Override
     public synchronized void upDateProfesor(Profesor profesor) {

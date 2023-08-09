@@ -67,7 +67,7 @@ class ProfesorDaoMemoryImplTest {
     }
 
     @Test
-    void getAllProfesores() {
+    void getAllProfesores() throws ProfesorException {
         List<Profesor> guardados = new ArrayList<>(){{
             add(profesor_1);
             add(profesor_2);

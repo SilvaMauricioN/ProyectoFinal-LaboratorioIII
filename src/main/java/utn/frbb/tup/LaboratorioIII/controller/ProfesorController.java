@@ -19,7 +19,6 @@ public class ProfesorController {
         this.profesorService = profesorService;
     }
     @PostMapping
-    //crear profesor
     public ProfesorDtoSalida crearProfesor(@RequestBody ProfesorDto dtoProfesor) throws ProfesorException, IllegalAccessException, MateriaNotFoundException {
         Validator.ValidarCampos(dtoProfesor);
         return profesorService.crearProfesor(dtoProfesor);

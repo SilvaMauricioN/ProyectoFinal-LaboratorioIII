@@ -17,6 +17,16 @@ public class AsignaturaDtoSalida {
     private List<String> correlativas = new ArrayList<>();
     private EstadoAsignatura estado;
     private Optional<Integer> nota = Optional.empty();
+
+    public AsignaturaDtoSalida(){}
+
+    public AsignaturaDtoSalida(String nombre, Integer anio, Integer cuatrimestre, String profesor) {
+        this.nombre = nombre;
+        this.anio = anio;
+        this.cuatrimestre = cuatrimestre;
+        this.profesor = profesor;
+    }
+
     public String getNombre() {
         return nombre;
     }

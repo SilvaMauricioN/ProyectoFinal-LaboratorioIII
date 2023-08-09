@@ -13,7 +13,7 @@ import utn.frbb.tup.LaboratorioIII.model.exception.ProfesorException;
 import java.util.List;
 
 @RestController
-@RequestMapping("Materia")
+@RequestMapping("materia")
 public class MateriaController {
     private final MateriaService materiaService;
     @Autowired

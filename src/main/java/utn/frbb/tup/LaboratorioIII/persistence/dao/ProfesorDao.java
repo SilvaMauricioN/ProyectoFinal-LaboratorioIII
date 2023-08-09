@@ -7,7 +7,7 @@ import java.util.List;
 public interface ProfesorDao {
     void saveProfesor(Profesor profesor) throws ProfesorException;
     Profesor findProfesor(Integer profesorId) throws ProfesorException;
-    List<Profesor> getAllProfesores();
+    List<Profesor> getAllProfesores() throws ProfesorException;
 
     void upDateProfesor(Profesor profesor);
 

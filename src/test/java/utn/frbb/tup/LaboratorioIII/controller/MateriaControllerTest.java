@@ -41,7 +41,7 @@ class MateriaControllerTest {
         MateriaDtoSalida materiaDtoSalida = new MateriaDtoSalida("Programacion",1,1);
 
         Mockito.when(materiaService.findMateria(1)).thenReturn(materiaDtoSalida);
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/Materia/{idMateria}",1)
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/materia/{idMateria}",1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)).andExpect(status().is2xxSuccessful())
                 .andReturn();
@@ -53,7 +53,7 @@ class MateriaControllerTest {
         Mockito.when(materiaService.findMateria(1)).thenThrow(new MateriaNotFoundException("MATERIA NO ENCONTRADA"));
 
         Exception exception = assertThrows(ServletException.class,()->{
-            mvc.perform(MockMvcRequestBuilders.get("/Materia/{idMateria}",1)
+            mvc.perform(MockMvcRequestBuilders.get("/materia/{idMateria}",1)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound())
                     .andReturn();
@@ -74,7 +74,7 @@ class MateriaControllerTest {
         materiaDto.setNombre("Laboratorio II");
         materiaDto.setProfesorId(1);
 
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/Materia/")
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/materia/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(materiaDto))
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().is2xxSuccessful())
@@ -86,7 +86,7 @@ class MateriaControllerTest {
     void crearMateriaValorInvalido() throws Exception {
         Mockito.when(materiaService.crearMateria(any(MateriaDto.class))).thenReturn(new MateriaDtoSalida());
 
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/Materia/")
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/materia/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"nombre\" : \"Laboratorio II\",\n" +
@@ -102,7 +102,7 @@ class MateriaControllerTest {
         Mockito.when(materiaService.crearMateria(any(MateriaDto.class))).thenReturn(new MateriaDtoSalida());
 
         Exception exception = assertThrows(ServletException.class,()->{
-            mvc.perform(MockMvcRequestBuilders.post("/Materia/")
+            mvc.perform(MockMvcRequestBuilders.post("/materia/")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{\n" +
                                     "    \"nombre\" : \"Laboratorio II\",\n" +
