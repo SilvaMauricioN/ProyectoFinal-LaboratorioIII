@@ -64,9 +64,10 @@ public class AlumnoDaoMemoryImpl implements AlumnoDao {
     }
 
     @Override
-    public synchronized void deleteAlumno(Integer idAlumno) {
+    public synchronized void deleteAlumno(Integer idAlumno) throws AlumnoNotFoundException {
+        if (!repositorioAlumnos.containsKey(idAlumno)) {
+            throw new AlumnoNotFoundException("ALUMNO ID: " + idAlumno + " NO ENCONTRADO");
+        }
         repositorioAlumnos.remove(idAlumno);
-
     }
-
 }

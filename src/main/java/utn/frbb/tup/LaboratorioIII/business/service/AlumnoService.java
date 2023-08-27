@@ -5,10 +5,7 @@ import utn.frbb.tup.LaboratorioIII.model.Nota;
 import utn.frbb.tup.LaboratorioIII.model.dto.AlumnoDto;
 import utn.frbb.tup.LaboratorioIII.model.dto.AlumnoDtoSalida;
 import utn.frbb.tup.LaboratorioIII.model.dto.AsignaturaDtoSalida;
-import utn.frbb.tup.LaboratorioIII.model.exception.AlumnoNotFoundException;
-import utn.frbb.tup.LaboratorioIII.model.exception.AsignaturaInexistenteException;
-import utn.frbb.tup.LaboratorioIII.model.exception.CorrelatividadesNoAprobadasException;
-import utn.frbb.tup.LaboratorioIII.model.exception.EstadoIncorrectoException;
+import utn.frbb.tup.LaboratorioIII.model.exception.*;
 
 import java.util.List;
 

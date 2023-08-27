@@ -1,6 +1,7 @@
 package utn.frbb.tup.LaboratorioIII.business.implement;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,16 +31,16 @@ import static org.mockito.Mockito.when;
 class CastingDtosTest {
     @Mock
     private MateriaDao materiaDao;
-    private static Materia materia_1, materia_2, materia_3;
-    private static MateriaDtoSalida materiaEsperada_1, materiaEsperada_2, materiaEsperada_3;
-    private static MateriaDto materiaDto1;
-    private static Profesor profesor_1;
-    private static ProfesorDtoSalida profesorEsperado;
-    private static ProfesorDto profesorDto;
+    private Materia materia_1, materia_2, materia_3;
+    private MateriaDtoSalida materiaEsperada_1, materiaEsperada_2, materiaEsperada_3;
+    private MateriaDto materiaDto1;
+    private Profesor profesor_1;
+    private ProfesorDtoSalida profesorEsperado;
+    private ProfesorDto profesorDto;
     @InjectMocks
     CastingDtos castingDtos;
-    @BeforeAll
-    public static void setUp() {
+    @BeforeEach
+    public void setUp() {
         materia_1 = new Materia("Laboratorio I", 1, 1);
         materia_2 = new Materia("Laboratorio II", 1, 2);
         materia_3 = new Materia("Laboratorio III", 2, 1);
@@ -60,12 +61,12 @@ class CastingDtosTest {
         }};
         materia_3.setListaCorrelatividades(materiasCorelativas);
         List<MateriaDtoSalida> listaEsperada = new ArrayList<>(){{
-            add(materiaEsperada_3);
+            add(materiaEsperada_1);
             add(materiaEsperada_2);
         }};
-        materiaEsperada_1.setCorrelativas(listaEsperada);
+        materiaEsperada_3.setCorrelativas(listaEsperada);
         MateriaDtoSalida materiaDtoSalidaObtenida = castingDtos.aMateriaDtoSalida(materia_3);
-        assertEquals(materiaEsperada_1,materiaDtoSalidaObtenida, "Las Materias a Mostar no son Iguales");
+        assertEquals(materiaEsperada_3,materiaDtoSalidaObtenida, "Las Materias a Mostar no son Iguales");
     }
     @Test
     void aMateriaDtoSalidaMateriaVacia() {
@@ -230,9 +231,4 @@ class CastingDtosTest {
         assertEquals(listaMapEsperado,posiblesErrores);
         assertEquals(materiasEsperadas,materiasObtenidas);
     }
-
-
-
-
-
 }

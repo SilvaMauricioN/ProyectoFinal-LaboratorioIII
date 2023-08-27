@@ -2,6 +2,7 @@ package utn.frbb.tup.LaboratorioIII.persistence.implement;
 
 
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
@@ -21,7 +22,7 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
     private final ProfesorDao profesorDao;
     private final GeneradorId generadorId = GeneradorId.getInstance();
     private static final Logger log = LoggerFactory.getLogger(MateriaDaoMemoryImpl.class);
-
+    @Autowired
     public MateriaDaoMemoryImpl(ProfesorDao profesorDao) throws MateriaNotFoundException {
         this.profesorDao = profesorDao;
         inicializarMateria();

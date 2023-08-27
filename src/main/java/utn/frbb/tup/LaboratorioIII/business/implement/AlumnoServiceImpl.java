@@ -7,10 +7,7 @@ import utn.frbb.tup.LaboratorioIII.business.service.AlumnoService;
 import utn.frbb.tup.LaboratorioIII.business.service.AsignaturaService;
 import utn.frbb.tup.LaboratorioIII.model.*;
 import utn.frbb.tup.LaboratorioIII.model.dto.*;
-import utn.frbb.tup.LaboratorioIII.model.exception.AlumnoNotFoundException;
-import utn.frbb.tup.LaboratorioIII.model.exception.AsignaturaInexistenteException;
-import utn.frbb.tup.LaboratorioIII.model.exception.CorrelatividadesNoAprobadasException;
-import utn.frbb.tup.LaboratorioIII.model.exception.EstadoIncorrectoException;
+import utn.frbb.tup.LaboratorioIII.model.exception.*;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.AlumnoDao;
 import utn.frbb.tup.LaboratorioIII.persistence.dao.AsignaturaDao;
 
@@ -78,7 +75,7 @@ public class AlumnoServiceImpl implements AlumnoService {
         return alumnoDtoSalida;
     }
     @Override
-    public void deleteAlumno(Integer idAlumno) throws AlumnoNotFoundException, AsignaturaInexistenteException {
+    public void deleteAlumno(Integer idAlumno) throws AlumnoNotFoundException, AsignaturaInexistenteException{
         alumnoDao.findAlumnoId(idAlumno);
         alumnoDao.deleteAlumno(idAlumno);
         asignaturaDao.deleteAsignaturas(idAlumno);
