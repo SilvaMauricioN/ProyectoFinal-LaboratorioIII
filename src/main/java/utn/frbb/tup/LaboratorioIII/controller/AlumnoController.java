@@ -20,7 +20,7 @@ public class AlumnoController {
     public AlumnoController(AlumnoService alumnoService){
         this.alumnoService = alumnoService;
     }
-    //Accesible desde un post
+
     @PostMapping()
     public AlumnoDtoSalida crearAlumno(@RequestBody AlumnoDto dtoAlumno) throws AsignaturaInexistenteException, AlumnoNotFoundException, IllegalAccessException {
         Validator.ValidarCampos(dtoAlumno);

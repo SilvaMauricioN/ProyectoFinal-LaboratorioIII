@@ -21,6 +21,7 @@ public class ProfesorDaoMemoryImpl implements ProfesorDao {
     public ProfesorDaoMemoryImpl() throws ProfesorException {
         inicializarProfesor();
     }
+    //se inicializa profesores en repositorio para prueba
     private synchronized void inicializarProfesor() throws ProfesorException {
         String[] apellidos =  {"Coppo","Troilo","Padilla","Balmaceda"};
         String[] nombres = {"Ricardo", "Juan", "Maria jose", "Luciano"};

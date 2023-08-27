@@ -4,9 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utn.frbb.tup.LaboratorioIII.model.Alumno;
-import utn.frbb.tup.LaboratorioIII.model.Materia;
 import utn.frbb.tup.LaboratorioIII.model.exception.AlumnoNotFoundException;
-import utn.frbb.tup.LaboratorioIII.model.exception.MateriaNotFoundException;
 import utn.frbb.tup.LaboratorioIII.persistence.GeneradorId;
 
 import java.util.ArrayList;
@@ -84,7 +82,7 @@ class AlumnoDaoMemoryImplTest {
         assertEquals(1, obtenidosModificada.size());
     }
     @Test
-    void deleteAlumno() throws MateriaNotFoundException, AlumnoNotFoundException {
+    void deleteAlumno() throws AlumnoNotFoundException {
         Alumno alumno = new Alumno("Nicolas","Silva",231245);
         Alumno alumno_2 = new Alumno("Mauricio","Silva",231245);
         alumnoDaoMemory.saveAlumno(alumno);

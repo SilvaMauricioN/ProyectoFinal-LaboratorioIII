@@ -29,6 +29,7 @@ public class CastingDtos {
 
 
     //Metodos Entidades de Salida
+    //metodo recursivo para crear materiaDtoSalida, con lista de materia correlativas
     public MateriaDtoSalida aMateriaDtoSalida(Materia materia){
         if(materia.getNombre() != null){
             MateriaDtoSalida materiaSalida = new MateriaDtoSalida();
@@ -117,6 +118,8 @@ public class CastingDtos {
     }
 
     //Metodos Entidades de Entrada
+    //convertir dto a objeto materia, retorna una lista de posible errores si alguna materia correlativa no se encuentra
+    //permite registrar una materia con más de una correlativa, a pesar de no encontrar una materia correlativa
     public List<Map<String, String>> aMateriaDto(Materia materia, MateriaDto dtoMateria) throws CorrelatividadException {
         materia.setNombre(dtoMateria.getNombre());
         materia.setAnio(dtoMateria.getYear());
@@ -133,6 +136,7 @@ public class CastingDtos {
             return posiblesErrores;
         }
     }
+    //convierte dot a objeto profesor, si alguna materia dictada no se encuntra se puede registra nuevo profesor igualmente
     public List<Map<String,String>> aProfesorDto(Profesor profesor, ProfesorDto dtoProfesor) throws ProfesorException {
         if(dtoProfesor != null){
             profesor.setNombre(dtoProfesor.getNombre());
@@ -160,6 +164,7 @@ public class CastingDtos {
         throw new ProfesorException("SIN DATOS");
 
     }
+    //convertir dto a alumno
     public  List<Map<String, String>> aAlumnoDto(Alumno alumno, AlumnoDto dtoAlumno) throws AsignaturaInexistenteException{
         alumno.setNombre(dtoAlumno.getNombre());
         alumno.setApellido(dtoAlumno.getApellido());
@@ -183,7 +188,8 @@ public class CastingDtos {
         }
 
     }
-    //Obtener lista de materias de la capa de persistencia de materia
+    //Obtener lista de materias de la capa de persistencia de materia, si alguna materia no encuentra se registra
+    //la excepcion arrojada
     public List<Materia> getListaMateriaPorId(List<Integer> listaId, List<Map<String,String>> Errores){
         List<Materia> listaMaterias = new ArrayList<>();
         if (listaId != null){

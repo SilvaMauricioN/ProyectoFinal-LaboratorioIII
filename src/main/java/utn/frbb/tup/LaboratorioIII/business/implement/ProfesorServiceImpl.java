@@ -75,6 +75,7 @@ public class ProfesorServiceImpl implements ProfesorService {
         }
         return materiasDictadasDTO;
     }
+    //al eliminar profesor, se borrar dicho profesor de las materias que dicta
     @Override
     public void deleteProfesor(Integer idProfesor) throws ProfesorException {
         Profesor profesor = profesorDao.findProfesor(idProfesor);

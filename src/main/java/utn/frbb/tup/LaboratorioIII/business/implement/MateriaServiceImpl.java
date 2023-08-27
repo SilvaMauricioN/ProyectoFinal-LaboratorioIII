@@ -72,6 +72,7 @@ public class MateriaServiceImpl implements MateriaService {
         return materiaDtoSalida;
     }
 
+    //al actualizar materia tambien se actualiza la materia en el profesor que la dicta
     @Override
     public MateriaDtoSalida actualizarMateria(Integer id, MateriaDto dtoMateria) throws MateriaNotFoundException, ProfesorException, CorrelatividadException {
 
@@ -101,6 +102,7 @@ public class MateriaServiceImpl implements MateriaService {
         return materiaDtoSalida;
     }
 
+    //si se elimina una materia, tambien se elimina la materia del registro de materia dictadas del profesor
     @Override
     public void deleteMateria(Integer idMateria) throws MateriaNotFoundException {
         Materia materiaPorEliminar = materiaDao.findMateria(idMateria);

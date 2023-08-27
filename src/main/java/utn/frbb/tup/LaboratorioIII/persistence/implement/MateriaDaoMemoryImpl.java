@@ -27,6 +27,8 @@ public class MateriaDaoMemoryImpl implements MateriaDao {
         this.profesorDao = profesorDao;
         inicializarMateria();
     }
+    //inicializo el repositorio con materia de prueba, se busca en el repositorio de profesores, para mantener las mismas
+    //instancias de profesores
     private synchronized void inicializarMateria() throws MateriaNotFoundException {
         String[] nombresMateriasPrimer = {"Programacion I", "Laboratorio I", "Sistema de Datos", "Ingles I"};
         List<Materia> materias = new ArrayList<>();
