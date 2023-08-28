@@ -15,13 +15,13 @@ import utn.frbb.tup.LaboratorioIII.model.exception.*;
 public class UtnResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class,ProfesorException.class,
             CorrelatividadException.class,Exception.class, EstadoIncorrectoException.class,
-            CorrelatividadesNoAprobadasException.class, MethodArgumentTypeMismatchException.class})
+            CorrelatividadesNoAprobadasException.class, MethodArgumentTypeMismatchException.class, AsignaturaInexistenteException.class})
     protected ResponseEntity<Object> handleConflict(Exception exception, WebRequest request) {
 
         HttpStatus status;
         String mensajeError = exception.getMessage();
 
-        if(exception instanceof MateriaNotFoundException || exception instanceof AlumnoNotFoundException){
+        if(exception instanceof MateriaNotFoundException || exception instanceof AlumnoNotFoundException || exception instanceof AsignaturaInexistenteException){
             status = HttpStatus.NOT_FOUND;
         }else if(exception instanceof IllegalArgumentException ||
                 exception instanceof ProfesorException ||

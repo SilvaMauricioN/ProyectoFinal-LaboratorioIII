@@ -30,7 +30,7 @@ public class AsignaturaDaoMemoryImpl implements AsignaturaDao {
                 if(AsignaturaId.equals(a.getMateria().getMateriaId())){
                     return a;
                 }else{
-                    return null;
+                    throw  new AsignaturaInexistenteException("NO EXISTE LA ASIGNATURA ID: " + AsignaturaId);
                 }
             }
         }
@@ -40,7 +40,6 @@ public class AsignaturaDaoMemoryImpl implements AsignaturaDao {
     public synchronized void upDateAsignatura(Integer Alumnoid, Asignatura asignaturaActualizada) {
         if(repositorioAsignatura.containsKey(Alumnoid)){
             List<Asignatura> cursadas = repositorioAsignatura.get(Alumnoid);
-
             for(int i = 0 ; i < cursadas.size(); i++ ){
                 Asignatura asignatura = cursadas.get(i);
                 if(asignatura.getMateria().getMateriaId() == asignaturaActualizada.getMateria().getMateriaId()){
